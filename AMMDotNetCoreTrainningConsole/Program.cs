@@ -10,6 +10,7 @@ AdoDotNetExample adoDotNet = new AdoDotNetExample();
 //adoDotNet.Read();
 //adoDotNet.Write();
 //adoDotNet.ReadById();
-adoDotNet.Update();
+//adoDotNet.Update();
+adoDotNet.Delete();
 
 Console.ReadKey();

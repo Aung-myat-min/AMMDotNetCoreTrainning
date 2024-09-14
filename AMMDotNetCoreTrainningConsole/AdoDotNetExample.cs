@@ -54,6 +54,48 @@ namespace AMMDotNetCoreTrainningConsole
             //}
         }
 
+        public void Write()
+        {
+            Console.WriteLine("Type the book information you want to record...");
+            Console.Write("Book Title: ");
+            string title = Console.ReadLine();
 
+            Console.Write("Book Author: ");
+            string author = Console.ReadLine();
+
+            Console.Write("Book Content: ");
+            string content = Console.ReadLine();
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            string query = @"INSERT INTO [dbo].[Tbl_Blog]
+                   ([BlogTitle]
+                   ,[BlogAuthor]
+                   ,[BlogContent]
+                   ,[DeleteFlag])
+             VALUES
+                   (@title
+                   ,@author
+                   ,@content
+                   ,0)";
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@title", title);
+            cmd.Parameters.AddWithValue("@author", author);
+            cmd.Parameters.AddWithValue("@content", content);
+            
+            int result = cmd.ExecuteNonQuery();
+
+            if(result == 0)
+            {
+                Console.WriteLine("Creating new book failed!");
+            }
+            else
+            {
+                Console.WriteLine("Successfully created new book!");
+            }
+
+            connection.Close();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -56,14 +57,14 @@ namespace AMMDotNetCoreTrainningConsole
 
         public void Write()
         {
-            Console.WriteLine("Type the book information you want to record...");
-            Console.Write("Book Title: ");
+            Console.WriteLine("Type the blog information you want to record...");
+            Console.Write("Blog Title: ");
             string title = Console.ReadLine();
 
-            Console.Write("Book Author: ");
+            Console.Write("Blog Author: ");
             string author = Console.ReadLine();
 
-            Console.Write("Book Content: ");
+            Console.Write("Blog Content: ");
             string content = Console.ReadLine();
 
             SqlConnection connection = new SqlConnection(connectionString);
@@ -86,16 +87,53 @@ namespace AMMDotNetCoreTrainningConsole
             
             int result = cmd.ExecuteNonQuery();
 
-            if(result == 0)
+            connection.Close();
+
+            if (result == 0)
             {
-                Console.WriteLine("Creating new book failed!");
+                Console.WriteLine("Creating new blog failed!");
             }
             else
             {
-                Console.WriteLine("Successfully created new book!");
+                Console.WriteLine("Successfully created new blog!");
             }
+        }
+
+        public void ReadById()
+        {
+            Console.WriteLine("You have started a method which get the blog information by the ID.");
+            Console.Write("Enter the blog of the ID: ");
+            string id = Console.ReadLine();
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            string query = @"
+                SELECT [BlogId]
+                      ,[BlogTitle]
+                      ,[BlogAuthor]
+                      ,[BlogContent]
+                      ,[DeleteFlag]
+                  FROM [dbo].[Tbl_Blog] WHERE BlogId = @BlogId";
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@BlogId", id);
+
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
 
             connection.Close();
+
+            if(dt.Rows.Count == 0)
+            {
+                Console.WriteLine("No Blog Found!");
+            }
+            else
+            {
+                DataRow dr = dt.Rows[0];
+                string output = $"Here is the Blog Information.\nBook Title:\t{dr["BlogTitle"]}\nBlog Author:\t{dr["BlogAuthor"]}\nBlog Content:\t{dr["BlogContent"]}";
+                Console.WriteLine(output);
+            }
         }
     }
 }

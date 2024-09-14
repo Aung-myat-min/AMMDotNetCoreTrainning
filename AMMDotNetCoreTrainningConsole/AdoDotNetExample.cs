@@ -99,11 +99,15 @@ namespace AMMDotNetCoreTrainningConsole
             }
         }
 
-        public void ReadById()
+        public void ReadById(string id = "")
         {
             Console.WriteLine("You have started a method which get the blog information by the ID.");
-            Console.Write("Enter the blog of the ID: ");
-            string id = Console.ReadLine();
+            
+            if(id.Length == 0)
+            {
+                Console.Write("Enter the blog of the ID: ");
+                id = Console.ReadLine();
+            }
 
             SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
@@ -133,6 +137,56 @@ namespace AMMDotNetCoreTrainningConsole
                 DataRow dr = dt.Rows[0];
                 string output = $"Here is the Blog Information.\nBook Title:\t{dr["BlogTitle"]}\nBlog Author:\t{dr["BlogAuthor"]}\nBlog Content:\t{dr["BlogContent"]}";
                 Console.WriteLine(output);
+            }
+        }
+
+        public void Update()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Instruction: 1. Find using ID 2. Edit the information.");
+            Console.Write("Enter the Blog Id: ");
+            string id = Console.ReadLine();
+
+            ReadById(id);
+
+            Console.WriteLine();
+            Console.Write("Blog Title: ");
+            string title = Console.ReadLine();
+
+            Console.Write("Blog Author: ");
+            string author = Console.ReadLine();
+
+            Console.Write("Blog Content: ");
+            string content = Console.ReadLine();
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            string query = @"UPDATE [dbo].[Tbl_Blog]
+               SET [BlogTitle] = @title
+                  ,[BlogAuthor] = @author
+                  ,[BlogContent] = @content
+                  ,[DeleteFlag] = 0
+             WHERE BlogId = @id";
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@title", title);
+            cmd.Parameters.AddWithValue("@author", author);
+            cmd.Parameters.AddWithValue("@content", content);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            int result = cmd.ExecuteNonQuery();
+
+            connection.Close();
+
+            if(result == 0)
+            {
+                Console.WriteLine("Updating Blog Failed!");
+            }
+            else
+            {
+                Console.WriteLine("Successfully Updated Blog!\nHere are the result!");
+                Console.WriteLine();
+                ReadById(id);
             }
         }
     }

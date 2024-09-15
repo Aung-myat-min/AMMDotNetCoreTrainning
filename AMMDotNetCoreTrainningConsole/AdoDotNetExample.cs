@@ -11,11 +11,11 @@ namespace AMMDotNetCoreTrainningConsole
     public class AdoDotNetExample
     {
 
-        private readonly string connectionString = "Data Source=DESKTOP-KPCHONN\\SQLEXPRESS;Initial Catalog=DotNetTrainning;User ID=sa;Password=sasa@123";
+        private readonly string _connectionString = "Data Source=DESKTOP-KPCHONN\\SQLEXPRESS;Initial Catalog=DotNetTrainning;User ID=sa;Password=sasa@123";
 
         public void Read()
         {
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(_connectionString);
             Console.WriteLine("Connection Opening...");
             connection.Open();
             Console.WriteLine("Connection Opened!");
@@ -67,7 +67,7 @@ namespace AMMDotNetCoreTrainningConsole
             Console.Write("Blog Content: ");
             string content = Console.ReadLine();
 
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(_connectionString);
             connection.Open();
 
             string query = @"INSERT INTO [dbo].[Tbl_Blog]
@@ -109,7 +109,7 @@ namespace AMMDotNetCoreTrainningConsole
                 id = Console.ReadLine();
             }
 
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(_connectionString);
             connection.Open();
 
             string query = @"
@@ -159,7 +159,7 @@ namespace AMMDotNetCoreTrainningConsole
             Console.Write("Blog Content: ");
             string content = Console.ReadLine();
 
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(_connectionString);
             connection.Open();
 
             string query = @"UPDATE [dbo].[Tbl_Blog]
@@ -199,7 +199,7 @@ namespace AMMDotNetCoreTrainningConsole
             Console.Write("Blog Id: ");
             string id = Console.ReadLine();
 
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(_connectionString);
             connection.Open();
 
             string query = @"UPDATE [dbo].[Tbl_Blog]

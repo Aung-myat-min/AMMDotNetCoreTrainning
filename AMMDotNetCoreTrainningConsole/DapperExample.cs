@@ -154,5 +154,53 @@ namespace AMMDotNetCoreTrainningConsole
                 }
             }
         }
+
+        public void Delete(int id = -1)
+        {
+            if(id == -1)
+            {
+                Console.WriteLine("Enter Id: ");
+                string BId = Console.ReadLine();
+                if(BId is null)
+                {
+                    Console.WriteLine("Blog Id can't be null!");
+                    return;
+                }
+                id = int.Parse(BId);
+            }
+
+            Console.WriteLine("Here is the blog you want to delete!");
+            Edit(id);
+
+            Console.Write("Do you want to continue?: (Press 'n' to cancel): ");
+            string answer = Console.ReadLine();
+            answer = answer.ToLower();
+            if(answer == "n")
+            {
+                return;
+            }
+
+            string query = @"UPDATE [dbo].[Tbl_Blog]
+               SET [DeleteFlag] = 1
+             WHERE BlogId = @BlogId";
+
+            //to actually delete data from db
+            //string query = @"DELETE FROM [dbo].[Tbl_Blog]
+            //    WHERE BlogId = @BlogId";
+            
+            using(IDbConnection db = new SqlConnection(_connectionString))
+            {
+                int result = db.Execute(query, new BlogDataModel() { BlogId = id });
+
+                if(result == 1)
+                {
+                    Console.WriteLine("Delete Successful!");
+                }else if (result == 0)
+                {
+                    Console.WriteLine("Deleteing Failed!");
+                }
+            }
+
+        }
     }
 }

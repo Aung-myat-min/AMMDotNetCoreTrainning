@@ -18,6 +18,7 @@ DapperExample dapperExample = new DapperExample();
 //dapperExample.Create("DapperTitle", "DapperContent", "DapperAuthor");
 //dapperExample.Edit(1015);
 //dapperExample.Update();
-dapperExample.Update(11, "Blog Without Content", "AMMHEHE");
+//dapperExample.Update(11, "Blog Without Content", "AMMHEHE");
+dapperExample.Delete();
 
 Console.ReadKey();

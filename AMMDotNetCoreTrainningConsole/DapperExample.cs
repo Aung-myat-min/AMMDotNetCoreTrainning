@@ -59,5 +59,30 @@ namespace AMMDotNetCoreTrainningConsole
                 Console.WriteLine(result == 1 ? "Saving Successful!" : "Saving Failed.");
             }
         }
+
+        public void Edit(int id)
+        {
+            string query = @"
+                SELECT [BlogId]
+                      ,[BlogTitle]
+                      ,[BlogAuthor]
+                      ,[BlogContent]
+                      ,[DeleteFlag]
+                  FROM [dbo].[Tbl_Blog] WHERE BlogId = @BlogId";
+            using(IDbConnection db = new SqlConnection(_connectionString))
+            {
+                var item = db.Query<BlogDataModel>(query, new BlogDataModel() { BlogId = id}).FirstOrDefault();
+
+                if(item is null)
+                {
+                    Console.WriteLine("Blog not found!");
+                    return;
+                }
+                Console.WriteLine("Here is the Blog you want!");
+                Console.WriteLine($"Blog Title: {item.BlogTitle}");
+                Console.WriteLine($"Blog Content: {item.BlogContent}");
+                Console.WriteLine($"Blog Author: {item.BlogAuthor}");
+            }
+        }
     }
 }

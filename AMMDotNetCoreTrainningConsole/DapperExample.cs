@@ -84,5 +84,75 @@ namespace AMMDotNetCoreTrainningConsole
                 Console.WriteLine($"Blog Author: {item.BlogAuthor}");
             }
         }
+
+        public void Update(int id = -1, string title = null, string author = null, string content = null)
+        {
+            if(id == -1)
+            {
+                Console.WriteLine("Enter Blog Id: ");
+                string BId = Console.ReadLine();
+                if (BId is null) {
+                    Console.WriteLine("Empty Id!");
+                    return;
+                }
+                id = int.Parse(BId);
+            }
+
+            if (title is null) {
+                Console.WriteLine("Enter Blog Title: ");
+                string BTitle = Console.ReadLine();
+                if (BTitle is null)
+                {
+                    Console.WriteLine("Empty Title!");
+                    return;
+                }
+                title = BTitle.Trim();
+            }
+
+            if (author is null)
+            {
+                Console.WriteLine("Enter Blog Author: ");
+                string BAuthor = Console.ReadLine();
+                if (BAuthor is null)
+                {
+                    Console.WriteLine("Empty Author!");
+                    return;
+                }
+                author = BAuthor.Trim();
+            }
+
+            if (content is null)
+            {
+                Console.WriteLine("Enter Blog Content: ");
+                string BContent = Console.ReadLine();
+                content = BContent;
+            }
+
+            string query = @"UPDATE [dbo].[Tbl_Blog]
+               SET [BlogTitle] = @BlogTitle
+                  ,[BlogAuthor] = @BlogAuthor
+                  ,[BlogContent] = @BlogContent
+             WHERE BlogId = @BlogId";
+
+            using(IDbConnection db = new SqlConnection(_connectionString))
+            {
+                int result = db.Execute(query, new BlogDataModel()
+                {
+                    BlogId = id,
+                    BlogTitle = title,
+                    BlogAuthor = author, 
+                    BlogContent = content
+                });
+
+                if (result == 0) {
+                    Console.WriteLine("Error Updating the Blog.");
+                }
+                else
+                {
+                    Console.WriteLine("This is the updated blog.");
+                    Edit(id);
+                }
+            }
+        }
     }
 }

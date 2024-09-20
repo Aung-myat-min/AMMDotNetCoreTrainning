@@ -14,6 +14,7 @@ Console.WriteLine("Hello, World!");
 //adoDotNet.Delete();
 
 DapperExample dapperExample = new DapperExample();
-dapperExample.Read();
+//dapperExample.Read();
+dapperExample.Create("DapperTitle", "DapperContent", "DapperAuthor");
 
 Console.ReadKey();

@@ -1,5 +1,6 @@
 ﻿using AMMDotNetCoreTrainningConsole.Models;
 using Dapper;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -98,7 +99,7 @@ namespace AMMDotNetCoreTrainningConsole
                 id = int.Parse(BId);
             }
 
-            if (title is null) {
+            if (title.IsNullOrEmpty()) {
                 Console.WriteLine("Enter Blog Title: ");
                 string BTitle = Console.ReadLine();
                 if (BTitle is null)
@@ -109,7 +110,7 @@ namespace AMMDotNetCoreTrainningConsole
                 title = BTitle.Trim();
             }
 
-            if (author is null)
+            if (author.IsNullOrEmpty())
             {
                 Console.WriteLine("Enter Blog Author: ");
                 string BAuthor = Console.ReadLine();
@@ -121,7 +122,7 @@ namespace AMMDotNetCoreTrainningConsole
                 author = BAuthor.Trim();
             }
 
-            if (content is null)
+            if (content.IsNullOrEmpty())
             {
                 Console.WriteLine("Enter Blog Content: ");
                 string BContent = Console.ReadLine();

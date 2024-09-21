@@ -67,5 +67,31 @@ namespace AMMDotNetCoreTrainningConsole
 
             Console.WriteLine(result == 1 ? "Saving Successful!" : "Saving Failed!");
         }
+
+        public void Edit(int id = -1)
+        {
+            if (id == -1)
+            {
+                Console.Write("Enter Id: ");
+                string BId = Console.ReadLine();
+                if (BId.IsNullOrEmpty())
+                {
+                    Console.WriteLine("Error: Id is not provided.");
+                    return;
+                }
+                id = int.Parse(BId);
+            }
+
+            BlogModelEFContext db = new BlogModelEFContext();
+            var blog = db.Blog.Where(x => x.BlogId == id && x.DeleteFlag == false).FirstOrDefault();
+
+            if(blog is null)
+            {
+                Console.WriteLine("Blog not found!");
+                return;
+            }
+
+            Console.WriteLine($"Blod Id: {blog.BlogId}\nBlog Title: {blog.BlogTitle}\nBlog Author: {blog.BlogAuthor}\nBlog Content: {blog.BlogContent}\n");
+        }
     }
 }

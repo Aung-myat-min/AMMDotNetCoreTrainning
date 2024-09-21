@@ -92,7 +92,7 @@ namespace AMMDotNetCoreTrainningConsole
             {
                 Console.WriteLine("Enter Blog Id: ");
                 string BId = Console.ReadLine();
-                if (BId is null) {
+                if (BId.IsNullOrEmpty()) {
                     Console.WriteLine("Empty Id!");
                     return;
                 }

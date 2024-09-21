@@ -13,12 +13,15 @@ Console.WriteLine("Hello, World!");
 ////adoDotNet.Update();
 //adoDotNet.Delete();
 
-DapperExample dapperExample = new DapperExample();
+//DapperExample dapperExample = new DapperExample();
 //dapperExample.Read();
 //dapperExample.Create("DapperTitle", "DapperContent", "DapperAuthor");
 //dapperExample.Edit(1015);
 //dapperExample.Update();
 //dapperExample.Update(11, "Blog Without Content", "AMMHEHE");
-dapperExample.Delete();
+//dapperExample.Delete();
+
+EFCoreExample eFCoreExample = new EFCoreExample();
+eFCoreExample.Read();
 
 Console.ReadKey();

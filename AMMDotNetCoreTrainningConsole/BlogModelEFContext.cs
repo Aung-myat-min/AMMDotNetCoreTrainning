@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AMMDotNetCoreTrainningConsole
 {
-    public class BlogModelAdoContext: DbContext
+    public class BlogModelEFContext: DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

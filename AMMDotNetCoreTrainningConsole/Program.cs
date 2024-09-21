@@ -24,6 +24,7 @@ Console.WriteLine("Hello, World!");
 EFCoreExample eFCoreExample = new EFCoreExample();
 //eFCoreExample.Read();
 //eFCoreExample.Write("EfCoreExample", "AMM");
-eFCoreExample.Edit(8);
+//eFCoreExample.Edit(8);
+eFCoreExample.Update();
 
 Console.ReadKey();

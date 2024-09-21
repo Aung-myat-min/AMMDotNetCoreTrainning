@@ -144,7 +144,7 @@ namespace AMMDotNetCoreTrainningConsole
             }
 
             BlogModelEFContext db = new BlogModelEFContext();
-            var item = db.Blog.FirstOrDefault(x => x.BlogId == id && x.DeleteFlag == false);
+            var item = db.Blog.AsNoTracking().FirstOrDefault(x => x.BlogId == id && x.DeleteFlag == false);
 
             if(item is null)
             {
@@ -180,6 +180,37 @@ namespace AMMDotNetCoreTrainningConsole
                 Console.WriteLine("This is the updated blog.");
                 Edit(id);
             }
+        }
+
+        public void Delete(int id = -1)
+        {
+            if(id == -1)
+            {
+                Console.Write("Enter Id:");
+                string BId = Console.ReadLine();
+
+                if (BId.IsNullOrEmpty())
+                {
+                    Console.WriteLine("Error: Id not provided!");
+                    return;
+                }
+
+                id = int.Parse(BId);
+            }
+
+            BlogModelEFContext db = new BlogModelEFContext();
+            var item = db.Blog.AsNoTracking().FirstOrDefault(x => x.BlogId == id && x.DeleteFlag == false);
+
+            if (item == null) {
+                Console.WriteLine("No Blog Found!");return;
+            }
+
+            item.DeleteFlag = false;
+
+            db.Entry(item).State = EntityState.Deleted;
+            int result = db.SaveChanges();
+
+            Console.WriteLine(result == 1 ? "Deleted!" : "Error Deleting Blog");
         }
     }
 }

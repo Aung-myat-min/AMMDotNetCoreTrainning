@@ -25,6 +25,7 @@ EFCoreExample eFCoreExample = new EFCoreExample();
 //eFCoreExample.Read();
 //eFCoreExample.Write("EfCoreExample", "AMM");
 //eFCoreExample.Edit(8);
-eFCoreExample.Update();
+//eFCoreExample.Update();
+eFCoreExample.Delete(9);
 
 Console.ReadKey();

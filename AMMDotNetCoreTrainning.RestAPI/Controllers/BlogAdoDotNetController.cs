@@ -198,7 +198,60 @@ namespace AMMDotNetCoreTrainning.RestAPI.Controllers
         [HttpPatch("{id}")]
         public IActionResult PatchBlog(int id, BlogViewModel blog)
         {
-            return Ok();
+            string condition = "";
+
+            if (id < 0 || id == 0)
+            {
+                return BadRequest("Blod Id can't be 0 or negative.");
+            }
+            if (!string.IsNullOrEmpty(blog.Title))
+            {
+                condition += " BlogTitle = @title, ";
+            }
+            if (!string.IsNullOrEmpty(blog.Content))
+            {
+                condition += " BlogContent = @content, ";
+            }
+            if (!string.IsNullOrEmpty(blog.Author))
+            {
+                condition += " BlogAuthor = @author, ";
+            }
+
+            SqlConnection connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            condition = condition.Substring(0, condition.Length - 2);
+
+            string query = @$"UPDATE [dbo].[Tbl_Blog]
+                           SET {condition}
+                         WHERE DeleteFlag = 0 AND BlogId = @id";
+
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            if (!string.IsNullOrEmpty(blog.Title))
+            {
+                cmd.Parameters.AddWithValue("@title", blog.Title);
+            }
+            if (!string.IsNullOrEmpty(blog.Content))
+            {
+                cmd.Parameters.AddWithValue("@content", blog.Content);
+            }
+            if (!string.IsNullOrEmpty(blog.Author))
+            {
+                cmd.Parameters.AddWithValue("@author", blog.Author);
+            }
+
+            int result = cmd.ExecuteNonQuery();
+
+            connection.Close();
+
+            if (result == 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+            }
+
+            return Ok("Blog Updated!");
         }
 
         [HttpDelete("{id}")]

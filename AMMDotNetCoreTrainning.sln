@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMMDotNetCoreTrainningConsole", "AMMDotNetCoreTrainningConsole\AMMDotNetCoreTrainningConsole.csproj", "{B922807A-E524-44D9-A323-E3CB9986CF27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMMDotNetCoreTrainningConsole", "AMMDotNetCoreTrainningConsole\AMMDotNetCoreTrainningConsole.csproj", "{B922807A-E524-44D9-A323-E3CB9986CF27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMMDotNetCoreTrainning.Database", "AMMDotNetCoreTrainning.Database\AMMDotNetCoreTrainning.Database.csproj", "{D6A87C6B-9C10-4488-A740-6455F664A0DC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMMDotNetTrainning.Console2", "AMMDotNetTrainning.Console2\AMMDotNetTrainning.Console2.csproj", "{F697B2D8-FEAB-4168-BA2F-B2B0026C16DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMMDotNetCoreTrainning.RestAPI", "AMMDotNetCoreTrainning.RestAPI\AMMDotNetCoreTrainning.RestAPI.csproj", "{E07E8181-9B8E-4C5E-B03C-1B90B1D5FCF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{B922807A-E524-44D9-A323-E3CB9986CF27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B922807A-E524-44D9-A323-E3CB9986CF27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B922807A-E524-44D9-A323-E3CB9986CF27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6A87C6B-9C10-4488-A740-6455F664A0DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6A87C6B-9C10-4488-A740-6455F664A0DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6A87C6B-9C10-4488-A740-6455F664A0DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6A87C6B-9C10-4488-A740-6455F664A0DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F697B2D8-FEAB-4168-BA2F-B2B0026C16DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F697B2D8-FEAB-4168-BA2F-B2B0026C16DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F697B2D8-FEAB-4168-BA2F-B2B0026C16DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F697B2D8-FEAB-4168-BA2F-B2B0026C16DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E07E8181-9B8E-4C5E-B03C-1B90B1D5FCF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E07E8181-9B8E-4C5E-B03C-1B90B1D5FCF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E07E8181-9B8E-4C5E-B03C-1B90B1D5FCF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E07E8181-9B8E-4C5E-B03C-1B90B1D5FCF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

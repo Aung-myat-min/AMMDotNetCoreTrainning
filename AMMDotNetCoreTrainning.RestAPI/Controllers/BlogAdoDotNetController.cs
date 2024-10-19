@@ -12,7 +12,7 @@ namespace AMMDotNetCoreTrainning.RestAPI.Controllers
     [ApiController]
     public class BlogAdoDotNetController : ControllerBase
     {
-        private readonly String _connectionString = "DataSource=DESKTOP-KPCHONN\\SQLEXPRESS;Initial Catalog=DotNetTrainning;User Id=sa;Password=sasa@123;TrustServerCertificate=True;";
+        private readonly String _connectionString = "Data Source=DESKTOP-KPCHONN\\SQLEXPRESS;Initial Catalog=DotNetTrainning;User Id=sa;Password=sasa@123;TrustServerCertificate=True;";
 
         [HttpGet]
         public IActionResult GetBlogs()
@@ -36,7 +36,7 @@ namespace AMMDotNetCoreTrainning.RestAPI.Controllers
             {
                 blogs.Add(new BlogViewModel
                 {
-                    Id = Convert.ToInt32(reader["BlodId"]),
+                    Id = Convert.ToInt32(reader["BlogId"]),
                     Title = Convert.ToString(reader["BlogTitle"]),
                     Author = Convert.ToString(reader["BlogAuthor"]),
                     Content = Convert.ToString(reader["BlogContent"]),
@@ -51,7 +51,8 @@ namespace AMMDotNetCoreTrainning.RestAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult GetBlogById(int id)
         {
-            if (id == 0 || id < 0) { 
+            if (id == 0 || id < 0)
+            {
                 return BadRequest("Invalid Id");
             }
 
@@ -71,20 +72,22 @@ namespace AMMDotNetCoreTrainning.RestAPI.Controllers
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@BlogId", id);
 
-            SqlDataAdapter adapter = new SqlDataAdapter();
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             adapter.Fill(dt);
 
 
             connection.Close();
 
-            if (dt.Rows.Count == 0) {
+            if (dt.Rows.Count == 0)
+            {
                 return NotFound("Blog Not Found!");
             }
 
             DataRow dr = dt.Rows[0];
 
-            blog = new BlogViewModel { 
+            blog = new BlogViewModel
+            {
                 Id = Convert.ToInt32(dr["BlogId"]),
                 Title = Convert.ToString(dr["BlogTitle"]),
                 Author = Convert.ToString(dr["BlogAuthor"]),
@@ -98,11 +101,13 @@ namespace AMMDotNetCoreTrainning.RestAPI.Controllers
         [HttpPost]
         public IActionResult CreateBlog(BlogViewModel blog)
         {
-            if (String.IsNullOrEmpty(blog.Title)) {
+            if (String.IsNullOrEmpty(blog.Title))
+            {
                 return BadRequest("Title can't be null or empty!");
             }
 
-            if (String.IsNullOrEmpty(blog.Author)) { 
+            if (String.IsNullOrEmpty(blog.Author))
+            {
                 return BadRequest("Author can't be null or empty!");
             }
 
@@ -134,7 +139,8 @@ namespace AMMDotNetCoreTrainning.RestAPI.Controllers
 
             connection.Close();
 
-            if (result == 1) {
+            if (result == 0)
+            {
                 return StatusCode(StatusCodes.Status500InternalServerError, "An Error Occured!");
             }
 
@@ -142,21 +148,86 @@ namespace AMMDotNetCoreTrainning.RestAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateBlog(int id, TblBlog blog)
+        public IActionResult UpdateBlog(int id, BlogViewModel blog)
         {
+            if (int.IsNegative(id))
+            {
+                return BadRequest("Id can't be a negative number");
+            }
+            if (String.IsNullOrEmpty(blog.Title))
+            {
+                return BadRequest("Blog Title can't be null or empty.");
+            }
+            if (String.IsNullOrEmpty(blog.Author))
+            {
+                return BadRequest("Blog Author can't be null or empty.");
+            }
+            if (String.IsNullOrEmpty(blog.Content))
+            {
+                return BadRequest("Blog Content can't be null or empty.");
+            }
 
+            SqlConnection connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            string query = @"UPDATE [dbo].[Tbl_Blog]
+                           SET [BlogTitle] = @title
+                              ,[BlogAuthor] = @author
+                              ,[BlogContent] = @content
+                              ,[DeleteFlag] = @deleteflag
+                         WHERE BlogId = @id";
+
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@title", blog.Title);
+            cmd.Parameters.AddWithValue("@author", blog.Author);
+            cmd.Parameters.AddWithValue("@content", blog.Content);
+            cmd.Parameters.AddWithValue("@deleteflag", blog.DeleteFlag);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            int result = cmd.ExecuteNonQuery();
+            connection.Close();
+
+            if (result == 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error Occured!");
+            }
+
+            return Ok("Blog Updated!");
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PatchBlog(int id, TblBlog blog)
+        public IActionResult PatchBlog(int id, BlogViewModel blog)
         {
-
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteBlog(int id)
         {
+            if (id == 0 || int.IsNegative(id))
+            {
+                return BadRequest("Id can't be 0 or Negative");
+            }
 
+            SqlConnection connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            string query = @"UPDATE [dbo].[Tbl_Blog]
+                           SET [DeleteFlag] = 1
+                         WHERE BlogId = @id";
+
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@id", id);
+            int result = cmd.ExecuteNonQuery();
+
+            connection.Close();
+
+            if (result == 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error!");
+            }
+
+            return Ok("Blog Deleted!");
         }
     }
 }

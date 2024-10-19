@@ -1,6 +1,6 @@
-﻿using AMMDotNetCoreTrainning.Database.Models;
-using AMMDotNetCoreTrainning.RestAPI.ViewModel;
+﻿using AMMDotNetCoreTrainning.RestAPI.ViewModel;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -69,7 +69,7 @@ namespace AMMDotNetCoreTrainning.RestAPI.Controllers
                           FROM [dbo].[Tbl_Blog] WHERE DeleteFlag = 0 AND BlogId = @BlogId";
 
             SqlCommand cmd = new SqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("BlodId", id);
+            cmd.Parameters.AddWithValue("@BlogId", id);
 
             SqlDataAdapter adapter = new SqlDataAdapter();
             DataTable dt = new DataTable();
@@ -96,9 +96,49 @@ namespace AMMDotNetCoreTrainning.RestAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateBlog(TblBlog blog)
+        public IActionResult CreateBlog(BlogViewModel blog)
         {
+            if (String.IsNullOrEmpty(blog.Title)) {
+                return BadRequest("Title can't be null or empty!");
+            }
 
+            if (String.IsNullOrEmpty(blog.Author)) { 
+                return BadRequest("Author can't be null or empty!");
+            }
+
+            if (String.IsNullOrEmpty(blog.Content))
+            {
+                return BadRequest("Contant can't be null or empty!");
+            }
+
+            SqlConnection connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            string query = @"INSERT INTO [dbo].[Tbl_Blog]
+                               ([BlogTitle]
+                               ,[BlogAuthor]
+                               ,[BlogContent]
+                               ,[DeleteFlag])
+                         VALUES
+                               (@BlogTitle
+                               ,@BlogAuthor
+                               ,@BlogContent
+                               ,0)";
+
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@BlogTitle", blog.Title);
+            cmd.Parameters.AddWithValue("@BlogAuthor", blog.Author);
+            cmd.Parameters.AddWithValue("@BlogContent", blog.Content);
+
+            int result = cmd.ExecuteNonQuery();
+
+            connection.Close();
+
+            if (result == 1) {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An Error Occured!");
+            }
+
+            return Ok();
         }
 
         [HttpPut("{id}")]

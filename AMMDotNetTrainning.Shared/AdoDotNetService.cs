@@ -56,9 +56,9 @@ namespace AMMDotNetTrainning.Shared
         }
     }
 
-    public class SqlParameterModel
-    {
-        public string Name { get; set; }
-        public object Value { get; set; }
-    }
+    //public class SqlParameterModel
+    //{
+    //    public string Name { get; set; }
+    //    public object Value { get; set; }
+    //}
 }

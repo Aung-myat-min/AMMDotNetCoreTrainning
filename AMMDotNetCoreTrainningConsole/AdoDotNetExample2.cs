@@ -90,7 +90,7 @@ namespace AMMDotNetCoreTrainningConsole
                       ,[BlogContent]
                       ,[DeleteFlag]
                   FROM [dbo].[Tbl_Blog] WHERE BlogId = @BlogId";
-            DataTable dt = _adoDotNetService.Query(query, new SqlParameterModel { Name = "@BlogId", Value = id })
+            DataTable dt = _adoDotNetService.Query(query, new SqlParameterModel { Name = "@BlogId", Value = id });
 
 
             if (dt.Rows.Count == 0)

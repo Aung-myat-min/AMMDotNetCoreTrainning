@@ -17,9 +17,9 @@ namespace AMMDotNetTrainning.Shared
             connection.Open();
 
             SqlCommand cmd = new SqlCommand(query, connection);
-            if(sqlParameters is not null)
+            if (sqlParameters is not null)
             {
-                foreach(SqlParameterModel sqlParameter in sqlParameters)
+                foreach (SqlParameterModel sqlParameter in sqlParameters)
                 {
                     cmd.Parameters.AddWithValue(sqlParameter.Name, sqlParameter.Value);
                 }

@@ -6,7 +6,7 @@
 
 //namespace AMMDotNetTrainning.Shared
 //{
-//    internal class SqlParameter
+//    internal class SqlParameterModel
 //    {
 //        public string Name { get; set; }
 //        public object Value { get; set; }

@@ -33,6 +33,27 @@ namespace AMMDotNetTrainning.Shared
 
             return dt;
         }
+
+        public int Excute(string query, params SqlParameterModel[] sqlParameters)
+        {
+            SqlConnection connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            SqlCommand cmd = new SqlCommand(query, connection);
+            if (sqlParameters is not null)
+            {
+                foreach (SqlParameterModel sqlParameter in sqlParameters)
+                {
+                    cmd.Parameters.AddWithValue(sqlParameter.Name, sqlParameter.Value);
+                }
+            }
+
+            int result = cmd.ExecuteNonQuery();
+
+            connection.Close();
+
+            return result;
+        }
     }
 
     public class SqlParameterModel

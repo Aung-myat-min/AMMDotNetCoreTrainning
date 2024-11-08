@@ -79,7 +79,7 @@ app.MapGet("/blogs/{id}", (int id) =>
 app.MapPut("/blogs/{id}", (int id, TblBlog blog) =>
 {
     EfCoreDbContext db = new EfCoreDbContext();
-    var oldBlog = db.TblBlogs.AsNoTracking().FirstOrDefault(x => x.BlogId == id && x.DeleteFlag.Equals(false));
+    var oldBlog = db.TblBlogs.AsNoTracking().FirstOrDefault(x => x.BlogId == id && x.DeleteFlag == false);
 
     if (oldBlog is null)
     {
@@ -106,7 +106,7 @@ app.MapPut("/blogs/{id}", (int id, TblBlog blog) =>
 app.MapPatch("/blogs/{id}", (int id, TblBlog blog) =>
 {
     EfCoreDbContext db = new EfCoreDbContext();
-    var oldBlog = db.TblBlogs.AsNoTracking().FirstOrDefault(x => x.BlogId == id && x.DeleteFlag.Equals(false));
+    var oldBlog = db.TblBlogs.AsNoTracking().FirstOrDefault(x => x.BlogId == id && x.DeleteFlag == false);
 
     if (oldBlog is null)
     {
@@ -142,7 +142,7 @@ app.MapPatch("/blogs/{id}", (int id, TblBlog blog) =>
 app.MapDelete("/blogs/{id}", (int id) =>
 {
     EfCoreDbContext db = new EfCoreDbContext();
-    var blog = db.TblBlogs.AsNoTracking().FirstOrDefault(x => x.BlogId == id && x.DeleteFlag.Equals(false));
+    var blog = db.TblBlogs.AsNoTracking().FirstOrDefault(x => x.BlogId == id && x.DeleteFlag == false);
 
     if (blog is null)
     {

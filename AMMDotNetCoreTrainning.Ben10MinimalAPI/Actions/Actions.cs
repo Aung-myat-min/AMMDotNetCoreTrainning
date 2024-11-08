@@ -2,7 +2,7 @@
 {
     public static class Actions
     {
-        public static Tbl_Ben10? findById(int id, Ben10ResponseModel model)
+        public static Tbl_Ben10? findById(this int id, Ben10ResponseModel model)
         {
             foreach (var item in model.Tbl_Ben10)
             {
@@ -14,7 +14,7 @@
             return null;
         }
 
-        public static Ben10ResponseModel? replaceAlien(Tbl_Ben10 alien, Ben10ResponseModel model)
+        public static Ben10ResponseModel? replaceAlien(this Tbl_Ben10 alien, Ben10ResponseModel model)
         {
             var list = model.Tbl_Ben10.ToList();
             var targetedAlien = findById(alien.id, model);
@@ -31,7 +31,7 @@
             return null;
         }
 
-        public static Ben10ResponseModel? deleteAlien(Tbl_Ben10 alien, Ben10ResponseModel model)
+        public static Ben10ResponseModel? deleteAlien(this Tbl_Ben10 alien, Ben10ResponseModel model)
         {
             var list = model.Tbl_Ben10.ToList();
             var targetedAlien = findById(alien.id, model);

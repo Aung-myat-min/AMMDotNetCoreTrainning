@@ -96,7 +96,7 @@ app.MapPut("/blogs/{id}", (int id, TblBlog blog) =>
 
     if (result == 0)
     {
-        return Results.BadRequest("Some Error Occured");
+        return Results.StatusCode(StatusCodes.Status500InternalServerError);
     }
     return Results.Ok("Blog Updated");
 })
@@ -132,14 +132,34 @@ app.MapPatch("/blogs/{id}", (int id, TblBlog blog) =>
 
     if (result == 0)
     {
-        return Results.BadRequest("Some Error Occured");
+        return Results.StatusCode(StatusCodes.Status500InternalServerError);
     }
     return Results.Ok("Blog Updated");
 })
     .WithName("EditBlog")
     .WithOpenApi();
 
+app.MapDelete("/blogs/{id}", (int id) =>
+{
+    EfCoreDbContext db = new EfCoreDbContext();
+    var blog = db.TblBlogs.AsNoTracking().FirstOrDefault(x => x.BlogId == id && x.DeleteFlag.Equals(false));
 
+    if (blog is null)
+    {
+        return Results.NotFound("Blog Not Found!");
+    }
+
+    blog.DeleteFlag = true;
+
+    db.Entry(blog).State = EntityState.Modified;
+    int result = db.SaveChanges();
+
+    if (result == 0)
+    {
+        return Results.StatusCode(StatusCodes.Status500InternalServerError);
+    }
+    return Results.Ok("Blog Deleted!");
+});
 
 app.Run();
 

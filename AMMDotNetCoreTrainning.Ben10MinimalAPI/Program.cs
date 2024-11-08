@@ -161,4 +161,39 @@ app.MapPatch("/ben10/{id}", (int id, Tbl_Ben10 alien) =>
 })
     .WithName("EditAlien")
     .WithOpenApi();
+
+app.MapDelete("/ben10/{id}", (int id) =>
+{
+    var data = File.ReadAllText(filePath);
+    var result = JsonConvert.DeserializeObject<Ben10ResponseModel>(data);
+    if (result == null || result.Tbl_Ben10 == null)
+    {
+        return Results.Problem("Error reading data from the file.");
+    }
+    if(id <= 0)
+    {
+        return Results.BadRequest("Id can't be less than or equal to 0.");
+    }
+
+    var targetAlien = Actions.findById(id, result);
+    if (targetAlien is null)
+    {
+        return Results.NotFound("Alien With That Id not found!");
+    }
+
+    result = Actions.deleteAlien(targetAlien, result);
+    if (result == null)
+    {
+        return Results.Problem("Error Deleting Alien.");
+    }
+
+    var updatedData = JsonConvert.SerializeObject(result, Formatting.Indented);
+
+    File.WriteAllText(filePath, updatedData);
+
+    return Results.Ok("Alien Deleted!");
+
+})
+    .WithName("DeleteAlien")
+    .WithOpenApi();
 app.Run();

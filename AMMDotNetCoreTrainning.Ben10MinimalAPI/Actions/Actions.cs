@@ -30,5 +30,22 @@
             }
             return null;
         }
+
+        public static Ben10ResponseModel? deleteAlien(Tbl_Ben10 alien, Ben10ResponseModel model)
+        {
+            var list = model.Tbl_Ben10.ToList();
+            var targetedAlien = findById(alien.id, model);
+            if (targetedAlien != null)
+            {
+                int index = list.IndexOf(targetedAlien);
+                if (index != -1)
+                {
+                    list.RemoveAt(index);
+                }
+                model.Tbl_Ben10 = list.ToArray();
+                return model;
+            }
+            return null;
+        }
     }
 }

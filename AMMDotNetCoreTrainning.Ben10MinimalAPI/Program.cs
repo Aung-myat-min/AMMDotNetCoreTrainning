@@ -1,3 +1,4 @@
+using AMMDotNetCoreTrainning.Ben10MinimalAPI.Actions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Newtonsoft.Json;
 
@@ -38,15 +39,7 @@ app.MapGet("/ben10/{id}", (int id) =>
         return Results.NotFound("The database is empty!");
     }
 
-    Tbl_Ben10? targetAlien = null;
-    foreach (var alien in result.Tbl_Ben10)
-    {
-        if (alien.id == id)
-        {
-            targetAlien = alien;
-            break;
-        }
-    }
+    Tbl_Ben10? targetAlien = Actions.findById(id, result);
 
     if (targetAlien is null)
     {
@@ -82,6 +75,39 @@ app.MapPost("/ben10", (Tbl_Ben10 alien) =>
     .WithName("CreateAlien")
     .WithOpenApi();
 
+app.MapPut("/ben10/{id}", (int id, Tbl_Ben10 alien) =>
+{
+    var data = File.ReadAllText(filePath);
+    var result = JsonConvert.DeserializeObject<Ben10ResponseModel>(data);
+    if (result == null || result.Tbl_Ben10 == null)
+    {
+        return Results.Problem("Error reading data from the file.");
+    }
 
+    var targetAlien = Actions.findById(id, result);
+    if (targetAlien is null)
+    {
+        return Results.NotFound("Alien With That Id not found!");
+    }
 
+    targetAlien.name = alien.name;
+    targetAlien.description = alien.description;
+    targetAlien.power = alien.power;
+    targetAlien.rating = alien.rating;
+    targetAlien.color = alien.color;
+
+    result = Actions.replaceAlien(targetAlien, result);
+    if (result == null)
+    {
+        return Results.Problem("Error replacing alien.");
+    }
+
+    var updatedData = JsonConvert.SerializeObject(result, Formatting.Indented);
+
+    File.WriteAllText(filePath, updatedData);
+
+    return Results.Ok("Alien Updated!");
+})
+    .WithName("UpdateAlien")
+    .WithOpenApi();
 app.Run();

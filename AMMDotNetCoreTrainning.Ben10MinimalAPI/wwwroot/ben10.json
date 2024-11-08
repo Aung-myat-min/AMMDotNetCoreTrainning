@@ -1,0 +1,84 @@
+{
+  "Tbl_Ben10": [
+    {
+      "id": 1,
+      "name": "Ben Tennyson",
+      "description": "A young boy who can transform into ten different alien superheroes.",
+      "color": "Green",
+      "power": "Omnitrix",
+      "rating": 5
+    },
+    {
+      "id": 2,
+      "name": "Four Arms",
+      "description": "A strong and powerful alien with four arms.",
+      "color": "Red",
+      "power": "Super Strength",
+      "rating": 4
+    },
+    {
+      "id": 3,
+      "name": "Heatblast",
+      "description": "A fiery alien who can control fire.",
+      "color": "Orange",
+      "power": "Pyrokinesis",
+      "rating": 4
+    },
+    {
+      "id": 4,
+      "name": "Diamondhead",
+      "description": "A crystalline alien with diamond-hard skin.",
+      "color": "Blue",
+      "power": "Super Durability",
+      "rating": 3
+    },
+    {
+      "id": 5,
+      "name": "XLR8",
+      "description": "A fast and agile alien with super speed.",
+      "color": "Yellow",
+      "power": "Super Speed",
+      "rating": 4
+    },
+    {
+      "id": 6,
+      "name": "Grey Matter",
+      "description": "A tiny but intelligent alien with a big brain.",
+      "color": "Purple",
+      "power": "Super Intelligence",
+      "rating": 3
+    },
+    {
+      "id": 7,
+      "name": "Wildmutt",
+      "description": "A feral alien with enhanced senses and claws.",
+      "color": "Brown",
+      "power": "Super Senses",
+      "rating": 3
+    },
+    {
+      "id": 8,
+      "name": "Stinkfly",
+      "description": "A flying alien who can shoot sticky goo.",
+      "color": "Pink",
+      "power": "Flight and Sticky Goo",
+      "rating": 2
+    },
+    {
+      "id": 9,
+      "name": "Ripjaws",
+      "description": "An aquatic alien with sharp teeth and gills.",
+      "color": "Teal",
+      "power": "Aquatic Abilities",
+      "rating": 4
+    },
+    {
+      "id": 10,
+      "name": "Ghostfreak",
+      "description": "An intangible alien who can phase through objects.",
+      "color": "Gray",
+      "power": "Intangibility",
+      "rating": 5
+    }
+  ]
+}

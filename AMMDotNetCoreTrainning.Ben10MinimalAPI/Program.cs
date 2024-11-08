@@ -110,4 +110,55 @@ app.MapPut("/ben10/{id}", (int id, Tbl_Ben10 alien) =>
 })
     .WithName("UpdateAlien")
     .WithOpenApi();
+
+app.MapPatch("/ben10/{id}", (int id, Tbl_Ben10 alien) =>
+{
+    var data = File.ReadAllText(filePath);
+    var result = JsonConvert.DeserializeObject<Ben10ResponseModel>(data);
+    if (result == null || result.Tbl_Ben10 == null)
+    {
+        return Results.Problem("Error reading data from the file.");
+    }
+
+    var targetAlien = Actions.findById(id, result);
+    if (targetAlien is null)
+    {
+        return Results.NotFound("Alien With That Id not found!");
+    }
+
+    if(alien.name.Length != 0)
+    {
+        targetAlien.name = alien.name;
+    }
+    if (alien.description.Length != 0)
+    {
+        targetAlien.description = alien.description;
+    }
+    if (alien.color.Length != 0)
+    {
+        targetAlien.color = alien.color;
+    }
+    if (alien.rating >= 0)
+    {
+        targetAlien.rating = alien.rating;
+    }
+    if (alien.power.Length != 0)
+    {
+        targetAlien.power = alien.power;
+    }
+
+    result = Actions.replaceAlien(targetAlien, result);
+    if (result == null)
+    {
+        return Results.Problem("Error replacing alien.");
+    }
+
+    var updatedData = JsonConvert.SerializeObject(result, Formatting.Indented);
+
+    File.WriteAllText(filePath, updatedData);
+
+    return Results.Ok("Alien Updated!");
+})
+    .WithName("EditAlien")
+    .WithOpenApi();
 app.Run();

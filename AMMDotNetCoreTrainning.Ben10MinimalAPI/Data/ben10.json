@@ -93,8 +93,8 @@
       "name": "Testing Alien",
       "description": "Testing Alien with tools",
       "color": "Transparent",
-      "power": "Making the test successful and updated with PUT",
-      "rating": 5
+      "power": "Making the test successful and updated with PUT and PATCH",
+      "rating": 0
     }
   ]
 }

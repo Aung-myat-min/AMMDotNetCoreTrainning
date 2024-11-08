@@ -1,8 +1,8 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 const string filePath = "Data/ben10.json";
-var data = File.ReadAllText(filePath);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -22,6 +22,7 @@ app.UseHttpsRedirection();
 
 app.MapGet("/ben10", () =>
 {
+    var data = File.ReadAllText(filePath);
     var result = JsonConvert.DeserializeObject<Ben10ResponseModel>(data);
     return Results.Ok(result.Tbl_Ben10);
 })
@@ -30,6 +31,7 @@ app.MapGet("/ben10", () =>
 
 app.MapGet("/ben10/{id}", (int id) =>
 {
+    var data = File.ReadAllText(filePath);
     var result = JsonConvert.DeserializeObject<Ben10ResponseModel>(data);
     if (result.Tbl_Ben10.Length == 0)
     {
@@ -55,5 +57,31 @@ app.MapGet("/ben10/{id}", (int id) =>
 })
     .WithName("GetAlienByName")
     .WithOpenApi();
+
+app.MapPost("/ben10", (Tbl_Ben10 alien) =>
+{
+    var data = File.ReadAllText(filePath);
+    var result = JsonConvert.DeserializeObject<Ben10ResponseModel>(data);
+    if (result == null || result.Tbl_Ben10 == null)
+    {
+        return Results.Problem("Error reading data from the file.");
+    }
+
+    var list = result.Tbl_Ben10.ToList();
+    int newId = list.Count + 1;
+    alien.id = newId;
+    list.Add(alien);
+
+    result.Tbl_Ben10 = list.ToArray();
+    var updatedData = JsonConvert.SerializeObject(result, Formatting.Indented);
+
+    File.WriteAllText(filePath, updatedData);
+
+    return Results.Ok($"Your Alien is created with id: {newId}");
+})
+    .WithName("CreateAlien")
+    .WithOpenApi();
+
+
 
 app.Run();

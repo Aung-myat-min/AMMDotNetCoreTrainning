@@ -79,6 +79,22 @@
       "color": "Gray",
       "power": "Intangibility",
       "rating": 5
+    },
+    {
+      "id": 11,
+      "name": "Testing Alien",
+      "description": "Testing Alien with tools",
+      "color": "Transparent",
+      "power": "Making the test successful",
+      "rating": 5
+    },
+    {
+      "id": 12,
+      "name": "Testing Alien",
+      "description": "Testing Alien with tools",
+      "color": "Transparent",
+      "power": "Making the test successful",
+      "rating": 5
     }
   ]
 }

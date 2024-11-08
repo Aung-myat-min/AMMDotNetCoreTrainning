@@ -1,7 +1,3 @@
-using AMMDotNetCoreTrainning.Ben10MinimalAPI.Actions;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Newtonsoft.Json;
-
 var builder = WebApplication.CreateBuilder(args);
 const string filePath = "Data/ben10.json";
 
@@ -24,7 +20,7 @@ app.UseHttpsRedirection();
 app.MapGet("/ben10", () =>
 {
     var data = File.ReadAllText(filePath);
-    var result = JsonConvert.DeserializeObject<Ben10ResponseModel>(data);
+    var result = data.ToClass<Ben10ResponseModel>();
     return Results.Ok(result.Tbl_Ben10);
 })
     .WithName("GetAliens")
@@ -33,7 +29,7 @@ app.MapGet("/ben10", () =>
 app.MapGet("/ben10/{id}", (int id) =>
 {
     var data = File.ReadAllText(filePath);
-    var result = JsonConvert.DeserializeObject<Ben10ResponseModel>(data);
+    var result = data.ToClass<Ben10ResponseModel>();
     if (result.Tbl_Ben10.Length == 0)
     {
         return Results.NotFound("The database is empty!");
@@ -54,7 +50,7 @@ app.MapGet("/ben10/{id}", (int id) =>
 app.MapPost("/ben10", (Tbl_Ben10 alien) =>
 {
     var data = File.ReadAllText(filePath);
-    var result = JsonConvert.DeserializeObject<Ben10ResponseModel>(data);
+    var result = data.ToClass<Ben10ResponseModel>();
     if (result == null || result.Tbl_Ben10 == null)
     {
         return Results.Problem("Error reading data from the file.");
@@ -66,7 +62,7 @@ app.MapPost("/ben10", (Tbl_Ben10 alien) =>
     list.Add(alien);
 
     result.Tbl_Ben10 = list.ToArray();
-    var updatedData = JsonConvert.SerializeObject(result, Formatting.Indented);
+    var updatedData = result.ToJson();
 
     File.WriteAllText(filePath, updatedData);
 
@@ -78,7 +74,7 @@ app.MapPost("/ben10", (Tbl_Ben10 alien) =>
 app.MapPut("/ben10/{id}", (int id, Tbl_Ben10 alien) =>
 {
     var data = File.ReadAllText(filePath);
-    var result = JsonConvert.DeserializeObject<Ben10ResponseModel>(data);
+    var result = data.ToClass<Ben10ResponseModel>();
     if (result == null || result.Tbl_Ben10 == null)
     {
         return Results.Problem("Error reading data from the file.");
@@ -102,7 +98,7 @@ app.MapPut("/ben10/{id}", (int id, Tbl_Ben10 alien) =>
         return Results.Problem("Error replacing alien.");
     }
 
-    var updatedData = JsonConvert.SerializeObject(result, Formatting.Indented);
+    var updatedData = result.ToJson();
 
     File.WriteAllText(filePath, updatedData);
 
@@ -114,7 +110,7 @@ app.MapPut("/ben10/{id}", (int id, Tbl_Ben10 alien) =>
 app.MapPatch("/ben10/{id}", (int id, Tbl_Ben10 alien) =>
 {
     var data = File.ReadAllText(filePath);
-    var result = JsonConvert.DeserializeObject<Ben10ResponseModel>(data);
+    var result = data.ToClass<Ben10ResponseModel>();
     if (result == null || result.Tbl_Ben10 == null)
     {
         return Results.Problem("Error reading data from the file.");
@@ -126,7 +122,7 @@ app.MapPatch("/ben10/{id}", (int id, Tbl_Ben10 alien) =>
         return Results.NotFound("Alien With That Id not found!");
     }
 
-    if(alien.name.Length != 0)
+    if (alien.name.Length != 0)
     {
         targetAlien.name = alien.name;
     }
@@ -153,7 +149,7 @@ app.MapPatch("/ben10/{id}", (int id, Tbl_Ben10 alien) =>
         return Results.Problem("Error replacing alien.");
     }
 
-    var updatedData = JsonConvert.SerializeObject(result, Formatting.Indented);
+    var updatedData = result.ToJson();
 
     File.WriteAllText(filePath, updatedData);
 
@@ -165,12 +161,12 @@ app.MapPatch("/ben10/{id}", (int id, Tbl_Ben10 alien) =>
 app.MapDelete("/ben10/{id}", (int id) =>
 {
     var data = File.ReadAllText(filePath);
-    var result = JsonConvert.DeserializeObject<Ben10ResponseModel>(data);
+    var result = data.ToClass<Ben10ResponseModel>();
     if (result == null || result.Tbl_Ben10 == null)
     {
         return Results.Problem("Error reading data from the file.");
     }
-    if(id <= 0)
+    if (id <= 0)
     {
         return Results.BadRequest("Id can't be less than or equal to 0.");
     }
@@ -187,7 +183,7 @@ app.MapDelete("/ben10/{id}", (int id) =>
         return Results.Problem("Error Deleting Alien.");
     }
 
-    var updatedData = JsonConvert.SerializeObject(result, Formatting.Indented);
+    var updatedData = result.ToJson();
 
     File.WriteAllText(filePath, updatedData);
 

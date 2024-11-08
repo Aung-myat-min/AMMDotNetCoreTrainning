@@ -1,6 +1,6 @@
 ﻿namespace AMMDotNetCoreTrainning.Ben10MinimalAPI.Actions
 {
-    public class Actions
+    public static class Actions
     {
         public static Tbl_Ben10? findById(int id, Ben10ResponseModel model)
         {
@@ -46,6 +46,16 @@
                 return model;
             }
             return null;
+        }
+
+        public static string ToJson(this object obj)
+        {
+            return JsonConvert.SerializeObject(obj, Formatting.Indented);
+        }
+
+        public static T? ToClass<T>(this string obj)
+        {
+            return JsonConvert.DeserializeObject<T>(obj);
         }
     }
 }

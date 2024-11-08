@@ -1,5 +1,6 @@
 using AMMDotNetCoreTrainning.Database.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +75,71 @@ app.MapGet("/blogs/{id}", (int id) =>
 })
     .WithName("GetBlogById")
     .WithOpenApi();
+
+app.MapPut("/blogs/{id}", (int id, TblBlog blog) =>
+{
+    EfCoreDbContext db = new EfCoreDbContext();
+    var oldBlog = db.TblBlogs.AsNoTracking().FirstOrDefault(x => x.BlogId == id && x.DeleteFlag.Equals(false));
+
+    if (oldBlog is null)
+    {
+        return Results.NotFound("Blog is not found!");
+    }
+
+    oldBlog.BlogTitle = blog.BlogTitle;
+    oldBlog.BlogAuthor = blog.BlogAuthor;
+    oldBlog.BlogContent = blog.BlogContent;
+
+    db.Entry(oldBlog).State = EntityState.Modified;
+
+    int result = db.SaveChanges();
+
+    if (result == 0)
+    {
+        return Results.BadRequest("Some Error Occured");
+    }
+    return Results.Ok("Blog Updated");
+})
+    .WithName("UpdateBlog")
+    .WithOpenApi();
+
+app.MapPatch("/blogs/{id}", (int id, TblBlog blog) =>
+{
+    EfCoreDbContext db = new EfCoreDbContext();
+    var oldBlog = db.TblBlogs.AsNoTracking().FirstOrDefault(x => x.BlogId == id && x.DeleteFlag.Equals(false));
+
+    if (oldBlog is null)
+    {
+        return Results.NotFound("Blog is not found!");
+    }
+
+    if (!blog.BlogTitle.IsNullOrEmpty())
+    {
+        oldBlog.BlogTitle = blog.BlogTitle;
+    }
+    if (!blog.BlogAuthor.IsNullOrEmpty())
+    {
+        oldBlog.BlogAuthor = blog.BlogAuthor;
+    }
+    if (!blog.BlogContent.IsNullOrEmpty())
+    {
+        oldBlog.BlogContent = blog.BlogContent;
+    }
+
+    db.Entry(oldBlog).State = EntityState.Modified;
+
+    int result = db.SaveChanges();
+
+    if (result == 0)
+    {
+        return Results.BadRequest("Some Error Occured");
+    }
+    return Results.Ok("Blog Updated");
+})
+    .WithName("EditBlog")
+    .WithOpenApi();
+
+
 
 app.Run();
 

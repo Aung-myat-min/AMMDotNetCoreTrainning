@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AMMDotNetCoreTrainning.Domain.Features.Blog
 {
-    internal class BlogService
+    public class BlogService
     {
         private readonly EfCoreDbContext _db = new EfCoreDbContext();
 
@@ -40,6 +40,35 @@ namespace AMMDotNetCoreTrainning.Domain.Features.Blog
             }
 
             item = blog;
+
+            _db.Entry(item).State = EntityState.Modified;
+            _db.SaveChanges();
+
+            return blog;
+        }
+
+        public TblBlog? EditBlog(int id, TblBlog blog)
+        {
+            var item = GetTblBlog(id);
+            if (blog is null || item is null)
+            {
+                return null;
+            }
+
+            if (!string.IsNullOrEmpty(blog.BlogTitle))
+            {
+                item.BlogTitle = blog.BlogTitle.Trim();
+            }
+
+            if (!string.IsNullOrEmpty(blog.BlogAuthor))
+            {
+                item.BlogAuthor = blog.BlogAuthor.Trim();
+            }
+
+            if (!string.IsNullOrEmpty(blog.BlogContent))
+            {
+                item.BlogContent = blog.BlogContent.Trim();
+            }
 
             _db.Entry(item).State = EntityState.Modified;
             _db.SaveChanges();

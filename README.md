@@ -59,3 +59,5 @@ Used Command in database first
 ```bash
 dotnet ef dbcontext scaffold "Server=DESKTOP-KPCHONN\SQLEXPRESS;Database=DotNetTrainning;User Id=sa;Password=sasa@123;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -o Models -c EfCoreDbContext -t Tbl_Blog -f
 ```
+
+DotNet Trainning Batch 5 By Ko Sann Lynn Htun

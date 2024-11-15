@@ -24,6 +24,13 @@ namespace AMMDotNetCoreTrainning.Domain.Features.Blog
             return blog;
         }
 
+        public TblBlog CreateBlog(TblBlog blog)
+        {
+            _db.TblBlogs.Add(blog);
+            _db.SaveChanges();
+            return blog;
+        }
+
         public TblBlog? UpdateBlog(int id, TblBlog blog)
         {
             var item = GetTblBlog(id);

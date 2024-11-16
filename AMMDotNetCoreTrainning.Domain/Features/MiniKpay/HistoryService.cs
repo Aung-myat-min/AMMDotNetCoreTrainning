@@ -69,7 +69,6 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                     CreatedTime = history.CreatedTime,
                     ActionType = history.ActionType,
                     Amount = history.Amount,
-                    Account = history.Account,
                     FromAccount = history.FromAccount,
                     ToAccount = history.ToAccount,
                     FromPersonFullName = history.FromAccountNavigation != null

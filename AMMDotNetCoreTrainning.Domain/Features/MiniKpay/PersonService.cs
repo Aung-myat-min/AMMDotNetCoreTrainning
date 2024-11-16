@@ -40,7 +40,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return item;
         }
 
-        public bool? DeletePerson(string MobileNo)
+        public bool? DeactivatePerson(string MobileNo)
         {
             var person = GetPersonByMobileNo(MobileNo);
             if (person is null)

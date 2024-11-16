@@ -85,6 +85,44 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return true;
         }
 
+        public bool? Deposit(String MobileNo, long Amount, string Pin)
+        {
+            var person = _personService.GetPersonByMobileNo(MobileNo);
+            if (person is null)
+            {
+                return null;
+            }
+
+            var isPinCorrect = CheckPin(MobileNo, Pin);
+            if (isPinCorrect == false)
+            {
+                return false;
+            }
+
+            var updatedPerson = AddBalance(MobileNo, Amount);
+
+            return true;
+        }
+
+        public bool? Withdraw(String MobileNo, long Amount, string Pin)
+        {
+            var person = _personService.GetPersonByMobileNo(MobileNo);
+            if (person is null)
+            {
+                return null;
+            }
+
+            var isPinCorrect = CheckPin(MobileNo, Pin);
+            if (isPinCorrect == false)
+            {
+                return false;
+            }
+
+            var updatedPerson = ReduceBalance(MobileNo, Amount);
+
+            return true;
+        }
+
         public TblPerson? ReduceBalance(string MobileNo, long Amount)
         {
             var person = _personService.GetPersonByMobileNo(MobileNo);

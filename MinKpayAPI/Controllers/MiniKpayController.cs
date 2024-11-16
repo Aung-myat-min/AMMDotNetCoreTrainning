@@ -42,7 +42,7 @@ namespace MinKpay.API.Controllers
             {
                 return NotFound("User Not Found!");
             }
-            if (success == false)
+            else if (success == false)
             {
                 return BadRequest("Wrong Pin");
             }
@@ -50,25 +50,67 @@ namespace MinKpay.API.Controllers
             return Ok("Pin Changed Successfully!");
         }
 
-        [HttpPost("{mobileNo}/{pin}/{balance}")]
-        public IActionResult Deposit(string mobileNo, string pin, long balance)
+        [HttpPost("{mobileNo}/{pin}/{amount}")]
+        public IActionResult Deposit(string mobileNo, string pin, long amount)
         {
-            if (balance < 0)
+            if (amount < 0)
             {
                 return BadRequest("Balance can't be equal to or less than 0.");
             }
 
-            bool? isPinCorrect = _kpayService.CheckPin(mobileNo, pin);
-            if (isPinCorrect is null)
+            bool? isSuccess = _kpayService.Deposit(mobileNo, amount, pin);
+            if (isSuccess is null)
             {
                 return NotFound("User Not Found!");
             }
-            if (isPinCorrect == false)
+            if (isSuccess == false)
             {
                 return BadRequest("Wrong Pin");
             }
 
+            return Ok($"You have added {amount} to your account!");
+        }
 
+        [HttpPost("{mobileNo}/{pin}/{amount}")]
+        public IActionResult Withdraw(string mobileNo, string pin, long amount)
+        {
+            if (amount < 0)
+            {
+                return BadRequest("Balance can't be equal to or less than 0.");
+            }
+
+            bool? isSuccess = _kpayService.Withdraw(mobileNo, amount, pin);
+            if (isSuccess is null)
+            {
+                return NotFound("User Not Found!");
+            }
+            if (isSuccess == false)
+            {
+                return BadRequest("Wrong Pin");
+            }
+
+            return Ok($"You have withdrawed {amount} to your account!");
+        }
+
+        [HttpPost("{fromMobileNo}/{toMobileNo}/{pin}/{amount}")]
+        public IActionResult Transfer(string fromMobileNo, string toMobileNo, string pin, long amount)
+        {
+            if (amount < 0)
+            {
+                return BadRequest("Balance can't be equal to or less than 0.");
+            }
+
+            bool? isSuccess = _kpayService.Tansfer(fromMobileNo, toMobileNo, amount, pin);
+            if (isSuccess is null)
+            {
+                return NotFound("User Not Found!");
+            }
+            if (isSuccess == false)
+            {
+                return BadRequest("Wrong Pin");
+            }
+
+            return Ok($"You have transferred {amount}!");
         }
     }
 }

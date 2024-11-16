@@ -15,6 +15,8 @@ public partial class TblPerson
 
     public string Pin { get; set; } = null!;
 
+    public bool? DeleteFalg { get; set; }
+
     public virtual ICollection<TblHistory> TblHistoryFromAccountNavigations { get; set; } = new List<TblHistory>();
 
     public virtual ICollection<TblHistory> TblHistoryToAccountNavigations { get; set; } = new List<TblHistory>();

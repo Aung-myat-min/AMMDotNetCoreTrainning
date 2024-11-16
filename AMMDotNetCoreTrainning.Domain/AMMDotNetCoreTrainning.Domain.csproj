@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AMMDotNetCoreTrainning.Database\AMMDotNetCoreTrainning.Database.csproj" />
+    <ProjectReference Include="..\AMMDotNetTrainning.Shared\AMMDotNetTrainning.Shared.csproj" />
+    <ProjectReference Include="..\MiniKPay.Database\MiniKPay.Database.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -13,11 +13,15 @@ public partial class TblHistory
 
     public long Amount { get; set; }
 
-    public int FromAccount { get; set; }
+    public int? Account { get; set; }
 
-    public int ToAccount { get; set; }
+    public int? FromAccount { get; set; }
 
-    public virtual TblPerson FromAccountNavigation { get; set; } = null!;
+    public int? ToAccount { get; set; }
 
-    public virtual TblPerson ToAccountNavigation { get; set; } = null!;
+    public virtual TblPerson? AccountNavigation { get; set; }
+
+    public virtual TblPerson? FromAccountNavigation { get; set; }
+
+    public virtual TblPerson? ToAccountNavigation { get; set; }
 }

@@ -27,7 +27,7 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<TblHistory>(entity =>
         {
-            entity.HasKey(e => e.HistoryId).HasName("PK__Tbl_Hist__4D7B4ABD5945AE1B");
+            entity.HasKey(e => e.HistoryId).HasName("PK__Tbl_Hist__4D7B4ABD5E571F02");
 
             entity.ToTable("Tbl_History");
 
@@ -38,15 +38,17 @@ public partial class AppDbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
+            entity.HasOne(d => d.AccountNavigation).WithMany(p => p.TblHistoryAccountNavigations)
+                .HasForeignKey(d => d.Account)
+                .HasConstraintName("FK__Tbl_Histo__Accou__1AD3FDA4");
+
             entity.HasOne(d => d.FromAccountNavigation).WithMany(p => p.TblHistoryFromAccountNavigations)
                 .HasForeignKey(d => d.FromAccount)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Tbl_Histo__FromA__14270015");
+                .HasConstraintName("FK__Tbl_Histo__FromA__1BC821DD");
 
             entity.HasOne(d => d.ToAccountNavigation).WithMany(p => p.TblHistoryToAccountNavigations)
                 .HasForeignKey(d => d.ToAccount)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Tbl_Histo__ToAcc__151B244E");
+                .HasConstraintName("FK__Tbl_Histo__ToAcc__1CBC4616");
         });
 
         modelBuilder.Entity<TblPerson>(entity =>

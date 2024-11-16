@@ -17,6 +17,8 @@ public partial class TblPerson
 
     public bool? DeleteFalg { get; set; }
 
+    public virtual ICollection<TblHistory> TblHistoryAccountNavigations { get; set; } = new List<TblHistory>();
+
     public virtual ICollection<TblHistory> TblHistoryFromAccountNavigations { get; set; } = new List<TblHistory>();
 
     public virtual ICollection<TblHistory> TblHistoryToAccountNavigations { get; set; } = new List<TblHistory>();

@@ -9,8 +9,16 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
 {
     public class MiniKpayService
     {
-        private readonly AppDbContext _db = new AppDbContext();
-        private readonly PersonService _personService = new PersonService();
+        private readonly AppDbContext _db;
+        private readonly PersonService _personService;
+        private readonly HistoryService _historyService;
+
+        public MiniKpayService()
+        {
+            _db = new AppDbContext();
+            _personService = new PersonService();
+            _historyService = new HistoryService();
+        }
 
         public long? BalanceCheck(string MobileNo)
         {
@@ -85,7 +93,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return true;
         }
 
-        public bool? Deposit(String MobileNo, long Amount, string Pin)
+        public bool? Deposit(string MobileNo, long Amount, string Pin)
         {
             var person = _personService.GetPersonByMobileNo(MobileNo);
             if (person is null)
@@ -101,10 +109,16 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
 
             var updatedPerson = AddBalance(MobileNo, Amount);
 
+            var history = _historyService.CreateDepositHistory(updatedPerson!.PersonId, Amount);
+            if (history is null)
+            {
+                return false;
+            }
+
             return true;
         }
 
-        public bool? Withdraw(String MobileNo, long Amount, string Pin)
+        public bool? Withdraw(string MobileNo, long Amount, string Pin)
         {
             var person = _personService.GetPersonByMobileNo(MobileNo);
             if (person is null)
@@ -119,6 +133,38 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             }
 
             var updatedPerson = ReduceBalance(MobileNo, Amount);
+
+            var history = _historyService.CreateWithdrawHistory(updatedPerson!.PersonId, Amount);
+            if (history is null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool? Tansfer(string FromMobileNo, string ToMobileNo, long Amount, string Pin)
+        {
+            var person = _personService.GetPersonByMobileNo(FromMobileNo);
+            if (person is null)
+            {
+                return null;
+            }
+            var isPinCorrect = CheckPin(FromMobileNo, Pin);
+            if (isPinCorrect == false)
+            {
+                return false;
+            }
+
+            var fromPerson = ReduceBalance(FromMobileNo, Amount);
+            var toPerson = AddBalance(ToMobileNo, Amount);
+
+            var history = _historyService.CreateTransferHistory(fromPerson!.PersonId, toPerson!.PersonId, Amount);
+
+            if (history is null)
+            {
+                return false;
+            }
 
             return true;
         }

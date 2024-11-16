@@ -11,4 +11,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AMMDotNetCoreTrainning.Domain\AMMDotNetCoreTrainning.Domain.csproj" />
+    <ProjectReference Include="..\AMMDotNetTrainning.Shared\AMMDotNetTrainning.Shared.csproj" />
+    <ProjectReference Include="..\MiniKPay.Database\MiniKPay.Database.csproj" />
+  </ItemGroup>
+
 </Project>

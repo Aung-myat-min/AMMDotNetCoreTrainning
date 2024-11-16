@@ -118,13 +118,13 @@ namespace MinKpay.API.Controllers
                 return BadRequest("Invalid mobile no or pin code!");
             }
 
-            var updatedUser = _personService.DeletePerson(mobileNo);
+            var updatedUser = _personService.DeactivatePerson(mobileNo);
             if (updatedUser == null)
             {
                 return NotFound();
             }
 
-            return Ok("User Deleted!");
+            return Ok("User Deactivated!");
         }
     }
 }

@@ -22,37 +22,53 @@ namespace MinKpay.API.Controllers
         }
 
         [HttpGet("{mobileNo}")]
-        public IActionResult GetPersonByMobile(string mobile)
+        public IActionResult GetBalance(string mobileNo)
         {
-            var person = _personService.GetPersonByMobileNo(mobile);
-            if (person == null)
+            long? balance = _kpayService.BalanceCheck(mobileNo);
+
+            if (balance is null)
             {
-                return NotFound("Person Not Found!");
+                return NotFound("User Not Found!");
             }
-            return Ok(person);
+
+            return Ok(balance);
         }
 
-        [HttpPost()]
-        public IActionResult CreateNewAccount(TblPerson person)
+        [HttpPatch("{mobileNo}/{oldPin}")]
+        public IActionResult ChangePin(string mobileNo, string oldPin, string newPin)
         {
-            string mobilePattern = @"^(09|01)[0-9]{6,9}$";
-            string pinPattern = @"^[0-9]{6}$";
-            if (person == null)
+            bool? success = _kpayService.ChangePin(mobileNo, oldPin, newPin);
+            if (success is null)
             {
-                return BadRequest("Person can't be empty!");
+                return NotFound("User Not Found!");
             }
-            if (String.IsNullOrEmpty(person.FullName) || person.FullName.Length < 4)
+            if (success == false)
             {
-                return BadRequest("Full name should be 4 characters minimum.");
+                return BadRequest("Wrong Pin");
             }
-            if (String.IsNullOrEmpty(person.MobileNo) || !Regex.IsMatch(person.MobileNo, mobilePattern))
+
+            return Ok("Pin Changed Successfully!");
+        }
+
+        [HttpPost("{mobileNo}/{pin}/{balance}")]
+        public IActionResult Deposit(string mobileNo, string pin, long balance)
+        {
+            if (balance < 0)
             {
-                return BadRequest("Mobile Number should be \n- 8 digits mimum\n- 11 digits maximum\n- And, should starts from 01 or 09");
+                return BadRequest("Balance can't be equal to or less than 0.");
             }
-            if (String.IsNullOrEmpty(person.Pin) || !Regex.IsMatch(person.Pin, pinPattern))
+
+            bool? isPinCorrect = _kpayService.CheckPin(mobileNo, pin);
+            if (isPinCorrect is null)
             {
-                return BadRequest("A Pin should be a combination of 6 digits");
+                return NotFound("User Not Found!");
             }
+            if (isPinCorrect == false)
+            {
+                return BadRequest("Wrong Pin");
+            }
+
+
         }
     }
 }

@@ -132,7 +132,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 return false;
             }
 
-            var updatedPerson = ReduceBalance(MobileNo, Amount);
+            var updatedPerson = ReduceBalance(MobileNo, Amount, 10000);
 
             var history = _historyService.CreateWithdrawHistory(updatedPerson!.PersonId, Amount);
             if (history is null)
@@ -156,7 +156,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 return false;
             }
 
-            var fromPerson = ReduceBalance(FromMobileNo, Amount);
+            var fromPerson = ReduceBalance(FromMobileNo, Amount, 0);
             var toPerson = AddBalance(ToMobileNo, Amount);
 
             var history = _historyService.CreateTransferHistory(fromPerson!.PersonId, toPerson!.PersonId, Amount);
@@ -169,7 +169,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return true;
         }
 
-        public TblPerson? ReduceBalance(string MobileNo, long Amount)
+        public TblPerson? ReduceBalance(string MobileNo, long Amount, long minimum)
         {
             var person = _personService.GetPersonByMobileNo(MobileNo);
             if (person is null)
@@ -178,6 +178,10 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             }
 
             person.Balance = person.Balance - Amount;
+            if (person.Balance < minimum)
+            {
+                return null;
+            }
             var updatedPerson = _personService.UpdatePerson(MobileNo, person);
 
             return updatedPerson;

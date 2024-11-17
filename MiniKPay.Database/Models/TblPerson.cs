@@ -7,13 +7,13 @@ public partial class TblPerson
 {
     public int PersonId { get; set; }
 
-    public string FullName { get; set; } = null!;
+    public string? FullName { get; set; } = null!;
 
-    public string MobileNo { get; set; } = null!;
+    public string? MobileNo { get; set; } = null!;
 
     public long? Balance { get; set; }
 
-    public string Pin { get; set; } = null!;
+    public string? Pin { get; set; } = null!;
 
     public bool? DeleteFalg { get; set; }
 

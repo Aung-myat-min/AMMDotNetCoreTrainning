@@ -27,7 +27,7 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<TblHistory>(entity =>
         {
-            entity.HasKey(e => e.HistoryId).HasName("PK__Tbl_Hist__4D7B4ABD5E571F02");
+            entity.HasKey(e => e.HistoryId).HasName("PK__Tbl_Hist__4D7B4ABDCDA5FA37");
 
             entity.ToTable("Tbl_History");
 
@@ -40,27 +40,27 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.AccountNavigation).WithMany(p => p.TblHistoryAccountNavigations)
                 .HasForeignKey(d => d.Account)
-                .HasConstraintName("FK__Tbl_Histo__Accou__1AD3FDA4");
+                .HasConstraintName("FK__Tbl_Histo__Accou__282DF8C2");
 
             entity.HasOne(d => d.FromAccountNavigation).WithMany(p => p.TblHistoryFromAccountNavigations)
                 .HasForeignKey(d => d.FromAccount)
-                .HasConstraintName("FK__Tbl_Histo__FromA__1BC821DD");
+                .HasConstraintName("FK__Tbl_Histo__FromA__29221CFB");
 
             entity.HasOne(d => d.ToAccountNavigation).WithMany(p => p.TblHistoryToAccountNavigations)
                 .HasForeignKey(d => d.ToAccount)
-                .HasConstraintName("FK__Tbl_Histo__ToAcc__1CBC4616");
+                .HasConstraintName("FK__Tbl_Histo__ToAcc__2A164134");
         });
 
         modelBuilder.Entity<TblPerson>(entity =>
         {
-            entity.HasKey(e => e.PersonId).HasName("PK__Tbl_Pers__AA2FFBE55B4AD37A");
+            entity.HasKey(e => e.PersonId).HasName("PK__Tbl_Pers__AA2FFBE52799966A");
 
             entity.ToTable("Tbl_Person");
 
-            entity.HasIndex(e => e.MobileNo, "UQ__Tbl_Pers__D6D73A86DE5EFE4A").IsUnique();
+            entity.HasIndex(e => e.MobileNo, "UQ__Tbl_Pers__D6D73A8662A20FB4").IsUnique();
 
             entity.Property(e => e.Balance).HasDefaultValueSql("((0))");
-            entity.Property(e => e.DeleteFalg).HasDefaultValueSql("((1))");
+            entity.Property(e => e.DeleteFalg).HasDefaultValueSql("((0))");
             entity.Property(e => e.FullName)
                 .HasMaxLength(255)
                 .IsUnicode(false);

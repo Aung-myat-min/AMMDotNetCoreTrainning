@@ -22,6 +22,11 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
         public TblPerson? GetPersonByMobileNo(string MobileNo)
         {
             var person = _db.TblPeople.AsNoTracking().Where(x => x.DeleteFalg == false && x.MobileNo == MobileNo).FirstOrDefault();
+            if (person is null)
+            {
+                return null;
+            }
+
             return person;
         }
 
@@ -33,7 +38,27 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 return null;
             }
 
-            item = person;
+            if (person.FullName != null)
+            {
+                item!.FullName = person.FullName;
+
+            }
+            if (person.MobileNo != null)
+            {
+                item!.MobileNo = person.MobileNo;
+
+            }
+            if (person.Balance != null)
+            {
+                item!.Balance = person.Balance;
+
+            }
+            if (person.Pin != null)
+            {
+                item!.Pin = person.Pin;
+
+            }
+
             _db.Entry(item).State = EntityState.Modified;
             _db.SaveChanges();
 

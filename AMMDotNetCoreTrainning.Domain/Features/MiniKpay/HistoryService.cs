@@ -10,7 +10,14 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
 {
     public class HistoryService
     {
-        private readonly AppDbContext _db = new AppDbContext();
+        private readonly AppDbContext _db;
+        private readonly PersonService _personService;
+
+        public HistoryService()
+        {
+            _db = new AppDbContext();
+            _personService = new PersonService();
+        }
 
         public TblHistory? CreateWithdrawHistory(int PersonId, long Amount)
         {
@@ -58,8 +65,15 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return newHistory;
         }
 
-        public List<ExtendedHistory> GetHistoryByPerson(int id)
+        public List<ExtendedHistory>? GetHistoryByPerson(string mobileNo)
         {
+            var person = _personService.GetPersonByMobileNo(mobileNo);
+            if (person is null)
+            {
+                return null;
+            }
+
+            int id = person.PersonId;
             var list = _db.TblHistories
                 .AsNoTracking()
                 .Where(x => x.FromAccount == id || x.ToAccount == id || x.Account == id)

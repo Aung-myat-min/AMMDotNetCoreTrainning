@@ -24,7 +24,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMMDotNetCoreTrainning.Doma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniKPay.Database", "MiniKPay.Database\MiniKPay.Database.csproj", "{53D8E884-B6D0-4116-A93D-801A13CA3EBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinKpay.API", "MinKpayAPI\MinKpay.API.csproj", "{2A9C7A85-E63D-4941-9EA0-3A23888194FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniKpay.API", "MinKpayAPI\MiniKpay.API.csproj", "{2A9C7A85-E63D-4941-9EA0-3A23888194FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

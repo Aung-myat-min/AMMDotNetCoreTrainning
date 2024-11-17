@@ -34,9 +34,9 @@ namespace MinKpay.API.Controllers
         }
 
         [HttpGet("{mobileNo}")]
-        public IActionResult GetPersonByMobile(string mobile)
+        public IActionResult GetPersonByMobile(string mobileNo)
         {
-            var person = _personService.GetPersonByMobileNo(mobile);
+            var person = _personService.GetPersonByMobileNo(mobileNo);
             if (person == null)
             {
                 return NotFound("Person Not Found!");
@@ -85,11 +85,11 @@ namespace MinKpay.API.Controllers
             {
                 return BadRequest("Full name should be 4 characters minimum.");
             }
-            if (String.IsNullOrEmpty(person.MobileNo) || !Regex.IsMatch(person.MobileNo, mobilePattern))
+            if (!String.IsNullOrEmpty(person.MobileNo) && !Regex.IsMatch(person.MobileNo, mobilePattern))
             {
                 return BadRequest("Mobile Number should be \n- 8 digits mimum\n- 11 digits maximum\n- And, should starts from 01 or 09");
             }
-            if (String.IsNullOrEmpty(person.Pin) || !Regex.IsMatch(person.Pin, pinPattern))
+            if (!String.IsNullOrEmpty(person.Pin) && !Regex.IsMatch(person.Pin, pinPattern))
             {
                 return BadRequest("A Pin should be a combination of 6 digits");
             }

@@ -34,7 +34,7 @@ namespace MinKpay.API.Controllers
             return Ok(balance);
         }
 
-        [HttpPatch("{mobileNo}/{oldPin}")]
+        [HttpPatch("{mobileNo}")]
         public IActionResult ChangePin(string mobileNo, string oldPin, string newPin)
         {
             bool? success = _kpayService.ChangePin(mobileNo, oldPin, newPin);
@@ -50,7 +50,7 @@ namespace MinKpay.API.Controllers
             return Ok("Pin Changed Successfully!");
         }
 
-        [HttpPost("{mobileNo}/{pin}/{amount}")]
+        [HttpPost("deposit/{mobileNo}/{amount}")]
         public IActionResult Deposit(string mobileNo, string pin, long amount)
         {
             if (amount < 0)
@@ -71,7 +71,7 @@ namespace MinKpay.API.Controllers
             return Ok($"You have added {amount} to your account!");
         }
 
-        [HttpPost("{mobileNo}/{pin}/{amount}")]
+        [HttpPost("withdraw/{mobileNo}/{amount}")]
         public IActionResult Withdraw(string mobileNo, string pin, long amount)
         {
             if (amount < 0)
@@ -92,7 +92,7 @@ namespace MinKpay.API.Controllers
             return Ok($"You have withdrawed {amount} to your account!");
         }
 
-        [HttpPost("{fromMobileNo}/{toMobileNo}/{pin}/{amount}")]
+        [HttpPost("{fromMobileNo}/{toMobileNo}/{amount}")]
         public IActionResult Transfer(string fromMobileNo, string toMobileNo, string pin, long amount)
         {
             if (amount < 0)
@@ -111,6 +111,18 @@ namespace MinKpay.API.Controllers
             }
 
             return Ok($"You have transferred {amount}!");
+        }
+
+        [HttpGet("history/{mobileNo}")]
+        public IActionResult GetHistory(string mobileNo)
+        {
+            var history = _historyService.GetHistoryByPerson(mobileNo);
+            if (history is null)
+            {
+                return NotFound("User Not Found!");
+            }
+
+            return Ok(history);
         }
     }
 }

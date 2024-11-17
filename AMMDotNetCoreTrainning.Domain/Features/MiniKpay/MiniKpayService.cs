@@ -133,6 +133,10 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             }
 
             var updatedPerson = ReduceBalance(MobileNo, Amount, 10000);
+            if(updatedPerson is null)
+            {
+                return false;
+            }
 
             var history = _historyService.CreateWithdrawHistory(updatedPerson!.PersonId, Amount);
             if (history is null)
@@ -157,7 +161,16 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             }
 
             var fromPerson = ReduceBalance(FromMobileNo, Amount, 0);
+            if(fromPerson is null)
+            {
+                return null;
+            }
+
             var toPerson = AddBalance(ToMobileNo, Amount);
+            if(toPerson is null)
+            {
+                return null;
+            }
 
             var history = _historyService.CreateTransferHistory(fromPerson!.PersonId, toPerson!.PersonId, Amount);
 

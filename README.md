@@ -60,4 +60,8 @@ Used Command in database first
 dotnet ef dbcontext scaffold "Server=DESKTOP-KPCHONN\SQLEXPRESS;Database=DotNetTrainning;User Id=sa;Password=sasa@123;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -o Models -c EfCoreDbContext -t Tbl_Blog -f
 ```
 
+## Mini KPay API Base Response Model
+
+> https://github.com/Aung-myat-min/AMMDotNetCoreTrainning/tree/a322df0906b47bb1d78f10d05fde992ad18ac22d
+
 DotNet Trainning Batch 5 By Ko Sann Lynn Htun

@@ -10,6 +10,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay.Models
     public class HistoryResponseModel
     {
         public BaseResponseModel ResponseModel { get; set; }
-        public TblHistory TblHistory { get; set; }
+        public TblHistory History { get; set; }
+        public List<ExtendedHistory>? Histories { get; set; }
     }
 }

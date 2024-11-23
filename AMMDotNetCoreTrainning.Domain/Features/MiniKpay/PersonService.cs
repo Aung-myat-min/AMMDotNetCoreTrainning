@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AMMDotNetCoreTrainning.Domain.Features.MiniKpay.Models;
+using Microsoft.EntityFrameworkCore;
 using MiniKPay.Database.Models;
 using System;
 using System.Collections.Generic;

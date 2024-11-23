@@ -47,6 +47,17 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             };
         }
 
+        public static BaseResponseModel Error(string responseCode, string responseDescription)
+        {
+            return new BaseResponseModel
+            {
+                ResponseCode = responseCode,
+                ResponseDescription = responseDescription,
+                ResponseType = EnumResponseType.Error,
+                IsSuccess = false
+            };
+        }
+
         public static BaseResponseModel ServerError(string responseCode, string responseDescription)
         {
             return new BaseResponseModel
@@ -66,5 +77,6 @@ public enum EnumResponseType
     Success,
     ValidationError,
     NotFound,
+    Error,
     ServerError
 }

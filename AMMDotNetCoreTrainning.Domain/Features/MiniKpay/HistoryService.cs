@@ -21,7 +21,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             _personService = new PersonService();
         }
 
-        public HistoryResponseModel CreateWithdrawHistory(int PersonId, long Amount)
+        public HistoryResponseModel CreateWithdrawHistory(int PersonId, long Amount, string message)
         {
             HistoryResponseModel response = new HistoryResponseModel();
 
@@ -41,14 +41,14 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
-            response.ResponseModel = BaseResponseModel.Success("001", "History Created!");
+            response.ResponseModel = BaseResponseModel.Success("001", message);
             response.History = newHistory;
 
         Result:
             return response;
         }
 
-        public HistoryResponseModel CreateDepositHistory(int PersonId, long Amount)
+        public HistoryResponseModel CreateDepositHistory(int PersonId, long Amount, string message)
         {
             HistoryResponseModel response = new HistoryResponseModel();
 
@@ -68,14 +68,14 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
-            response.ResponseModel = BaseResponseModel.Success("001", "History Created!");
+            response.ResponseModel = BaseResponseModel.Success("001", message);
             response.History = newHistory;
 
         Result:
             return response;
         }
 
-        public HistoryResponseModel? CreateTransferHistory(int FromPersonId, int ToPersonId, long Amount)
+        public HistoryResponseModel? CreateTransferHistory(int FromPersonId, int ToPersonId, long Amount, string message)
         {
             HistoryResponseModel response = new HistoryResponseModel();
 
@@ -105,7 +105,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
-            response.ResponseModel = BaseResponseModel.Success("001", "History Created!");
+            response.ResponseModel = BaseResponseModel.Success("001", message);
             response.History = sendHistory;
 
         Result:

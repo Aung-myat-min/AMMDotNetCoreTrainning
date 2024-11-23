@@ -32,7 +32,7 @@ namespace AMMDotNetTrainning.MiniKpay.API.Endpoints
                 return Ok();
             }
 
-            return StatusCode(500, "Internal Server");
+            return StatusCode(500, "Internal Server! (You Haven't Added a Response Type, Dev)");
         }
     }
 }

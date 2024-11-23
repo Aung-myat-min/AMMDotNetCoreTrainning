@@ -1,4 +1,6 @@
 ﻿using AMMDotNetCoreTrainning.Domain.Features.MiniKpay;
+using AMMDotNetCoreTrainning.Domain.Features.MiniKpay.Models;
+using AMMDotNetTrainning.MiniKpay.API.Endpoints;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +12,7 @@ namespace MinKpay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PersonController : ControllerBase
+    public class PersonController : BaseContorller
     {
         private readonly PersonService _personService;
         private readonly MiniKpayService _kpayService;
@@ -37,94 +39,49 @@ namespace MinKpay.API.Controllers
         public IActionResult GetPersonByMobile(string mobileNo)
         {
             var person = _personService.GetPersonByMobileNo(mobileNo);
-            if (person == null)
-            {
-                return NotFound("Person Not Found!");
-            }
-            return Ok(person);
+            return Excute(person);
         }
 
         [HttpPost]
         public IActionResult CreateNewAccount(TblPerson person)
         {
-
-            if (person == null)
-            {
-                return BadRequest("Person can't be empty!");
-            }
-            if (String.IsNullOrEmpty(person.FullName) || person.FullName.Length < 4)
-            {
-                return BadRequest("Full name should be 4 characters minimum.");
-            }
-            if (String.IsNullOrEmpty(person.MobileNo) || !Regex.IsMatch(person.MobileNo, mobilePattern))
-            {
-                return BadRequest("Mobile Number should be \n- 8 digits mimum\n- 11 digits maximum\n- And, should starts from 01 or 09");
-            }
-            if (String.IsNullOrEmpty(person.Pin) || !Regex.IsMatch(person.Pin, pinPattern))
-            {
-                return BadRequest("A Pin should be a combination of 6 digits");
-            }
-
             var newUser = _personService.CreateAccount(person);
-            if (newUser == null)
-            {
-                return BadRequest("Person Creation Failed!");
-            }
-
-            return Ok(newUser);
+            return Excute(newUser);
         }
 
         [HttpPatch("{mobileNo}/{pin}")]
         public IActionResult UpdateDetails(string mobileNo, string pin, TblPerson person)
         {
-            if (person == null)
-            {
-                return BadRequest("Person can't be empty!");
-            }
-            if (String.IsNullOrEmpty(person.FullName) || person.FullName.Length < 4)
-            {
-                return BadRequest("Full name should be 4 characters minimum.");
-            }
-            if (!String.IsNullOrEmpty(person.MobileNo) && !Regex.IsMatch(person.MobileNo, mobilePattern))
-            {
-                return BadRequest("Mobile Number should be \n- 8 digits mimum\n- 11 digits maximum\n- And, should starts from 01 or 09");
-            }
-            if (!String.IsNullOrEmpty(person.Pin) && !Regex.IsMatch(person.Pin, pinPattern))
-            {
-                return BadRequest("A Pin should be a combination of 6 digits");
-            }
-
+            PersonResponseModel model = new PersonResponseModel();
             bool? result = _kpayService.CheckPin(mobileNo, pin);
             if (result is null || result == false)
             {
-                return BadRequest("Invalid mobile no or pin code!");
+                model.ResponseModel = BaseResponseModel.Error("400", "Wrong Password!");
+                goto Result;
             }
 
-            var updatedUser = _personService.UpdatePerson(mobileNo, person);
-            if (updatedUser == null)
-            {
-                return NotFound();
-            }
+            model = _personService.UpdatePerson(mobileNo, person);
 
-            return Ok(updatedUser);
+        Result:
+            return Excute(model);
         }
 
         [HttpDelete("{mobileNo}/{pin}")]
         public IActionResult Delete(string mobileNo, string pin)
         {
+            PersonResponseModel model = new PersonResponseModel();
             bool? result = _kpayService.CheckPin(mobileNo, pin);
             if (result is null || result == false)
             {
-                return BadRequest("Invalid mobile no or pin code!");
+                model.ResponseModel = BaseResponseModel.Error("400", "Wrong Password!");
+                goto Result;
             }
 
-            var updatedUser = _personService.DeactivatePerson(mobileNo);
-            if (updatedUser == null)
-            {
-                return NotFound();
-            }
+            model = _personService.DeactivatePerson(mobileNo);
 
-            return Ok("User Deactivated!");
+
+        Result:
+            return Excute(model);
         }
     }
 }

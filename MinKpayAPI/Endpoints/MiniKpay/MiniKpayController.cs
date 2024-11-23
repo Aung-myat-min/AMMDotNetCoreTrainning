@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MiniKPay.Database.Models;
 using System.Text.RegularExpressions;
 
-namespace MinKpay.API.Controllers
+namespace AMMDotNetTrainning.MiniKpay.API.Endpoints.MiniKpay
 {
     [Route("api/[controller]")]
     [ApiController]

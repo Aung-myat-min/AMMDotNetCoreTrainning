@@ -1,4 +1,5 @@
 ﻿using AMMDotNetCoreTrainning.Domain.Features.MiniKpay;
+using AMMDotNetCoreTrainning.Domain.Features.MiniKpay.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MiniKPay.Database.Models;
@@ -8,7 +9,7 @@ namespace AMMDotNetTrainning.MiniKpay.API.Endpoints.MiniKpay
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MiniKpayController : ControllerBase
+    public class MiniKpayController : BaseContorller
     {
         private readonly MiniKpayService _kpayService;
         private readonly PersonService _personService;
@@ -24,105 +25,45 @@ namespace AMMDotNetTrainning.MiniKpay.API.Endpoints.MiniKpay
         [HttpGet("{mobileNo}")]
         public IActionResult GetBalance(string mobileNo)
         {
-            long? balance = _kpayService.BalanceCheck(mobileNo);
+            var balance = _kpayService.BalanceCheck(mobileNo);
 
-            if (balance is null)
-            {
-                return NotFound("User Not Found!");
-            }
-
-            return Ok(balance);
+            return Excute(balance);
         }
 
         [HttpPatch("{mobileNo}")]
         public IActionResult ChangePin(string mobileNo, string oldPin, string newPin)
         {
-            bool? success = _kpayService.ChangePin(mobileNo, oldPin, newPin);
-            if (success is null)
-            {
-                return NotFound("User Not Found!");
-            }
-            else if (success == false)
-            {
-                return BadRequest("Wrong Pin");
-            }
-
-            return Ok("Pin Changed Successfully!");
+            var success = _kpayService.ChangePin(mobileNo, oldPin, newPin);
+            return Excute(success);
         }
 
         [HttpPost("deposit/{mobileNo}/{amount}")]
         public IActionResult Deposit(string mobileNo, string pin, long amount)
         {
-            if (amount < 0)
-            {
-                return BadRequest("Balance can't be equal to or less than 0.");
-            }
-
-            bool? isSuccess = _kpayService.Deposit(mobileNo, amount, pin);
-            if (isSuccess is null)
-            {
-                return NotFound("User Not Found!");
-            }
-            if (isSuccess == false)
-            {
-                return BadRequest("Wrong Pin");
-            }
-
-            return Ok($"You have added {amount} to your account!");
+            var model = _kpayService.Deposit(mobileNo, amount, pin);
+            return Excute(model);
         }
 
         [HttpPost("withdraw/{mobileNo}/{amount}")]
         public IActionResult Withdraw(string mobileNo, string pin, long amount)
         {
-            if (amount < 0)
-            {
-                return BadRequest("Balance can't be equal to or less than 0.");
-            }
 
-            bool? isSuccess = _kpayService.Withdraw(mobileNo, amount, pin);
-            if (isSuccess is null)
-            {
-                return NotFound("User Not Found!");
-            }
-            if (isSuccess == false)
-            {
-                return BadRequest("Wrong Pin");
-            }
-
-            return Ok($"You have withdrawed {amount} to your account!");
+            var model = _kpayService.Withdraw(mobileNo, amount, pin);
+            return Excute(model);
         }
 
         [HttpPost("{fromMobileNo}/{toMobileNo}/{amount}")]
         public IActionResult Transfer(string fromMobileNo, string toMobileNo, string pin, long amount)
         {
-            if (amount < 0)
-            {
-                return BadRequest("Balance can't be equal to or less than 0.");
-            }
-
-            bool? isSuccess = _kpayService.Tansfer(fromMobileNo, toMobileNo, amount, pin);
-            if (isSuccess is null)
-            {
-                return NotFound("User Not Found!");
-            }
-            if (isSuccess == false)
-            {
-                return BadRequest("Wrong Pin");
-            }
-
-            return Ok($"You have transferred {amount}!");
+            var model = _kpayService.Tansfer(fromMobileNo, toMobileNo, amount, pin);
+            return Excute(model);
         }
 
         [HttpGet("history/{mobileNo}")]
         public IActionResult GetHistory(string mobileNo)
         {
             var history = _historyService.GetHistoryByPerson(mobileNo);
-            if (history is null)
-            {
-                return NotFound("User Not Found!");
-            }
-
-            return Ok(history);
+            return Excute(history);
         }
     }
 }

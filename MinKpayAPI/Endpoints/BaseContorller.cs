@@ -5,8 +5,11 @@ using Newtonsoft.Json.Linq;
 
 namespace AMMDotNetTrainning.MiniKpay.API.Endpoints
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class BaseContorller : ControllerBase
     {
+        [NonAction]
         public IActionResult Excute(object model)
         {
             JObject obj = JObject.Parse(JsonConvert.SerializeObject(model));
@@ -29,7 +32,7 @@ namespace AMMDotNetTrainning.MiniKpay.API.Endpoints
                     return NotFound(model);
                 }
 
-                return Ok();
+                return Ok(model);
             }
 
             return StatusCode(500, "Internal Server! (You Haven't Added a Response Type, Dev)");

@@ -83,38 +83,49 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return response;
         }
 
-        public bool? ChangePin(string MobileNo, string OldPin, string NewPin)
+        public PersonResponseModel ChangePin(string MobileNo, string OldPin, string NewPin)
         {
-            bool? status = false;
+            PersonResponseModel response = new PersonResponseModel();
+
             var isPinCorrect = CheckPin(MobileNo, OldPin);
             if (isPinCorrect == false || isPinCorrect is null)
             {
-                status = false;
+                response.ResponseModel = BaseResponseModel.Error("400", "Wrong Pin!");
                 goto Result;
             }
 
             var person = _personService.GetPersonByMobileNo(MobileNo);
-            if (person is null)
+            if (person.ResponseModel.ResponseType != EnumResponseType.Success)
             {
-                status = null;
+                response = person;
                 goto Result;
             }
 
             person.Person.Pin = NewPin;
 
             var updatedPeson = _personService.UpdatePerson(MobileNo, person.Person);
-            if (updatedPeson.ResponseModel.ResponseType == EnumResponseType.Success)
+            if (updatedPeson.ResponseModel.ResponseType != EnumResponseType.Success)
             {
-                status = true;
+                response = updatedPeson;
+                updatedPeson.Person = default;
+                goto Result;
             }
 
+            response.ResponseModel = BaseResponseModel.Success("001", "Pin changed successfully!");
+
         Result:
-            return status;
+            return response;
         }
 
-        public HistoryResponseModel? Deposit(string MobileNo, long Amount, string Pin)
+        public HistoryResponseModel Deposit(string MobileNo, long Amount, string Pin)
         {
             HistoryResponseModel response = new HistoryResponseModel();
+
+            if (Amount > 0)
+            {
+                response.ResponseModel = BaseResponseModel.ValidationError("400", "Amount can't be less than or equal to 0.");
+                goto Result;
+            }
 
             var person = _personService.GetPersonByMobileNo(MobileNo);
             if (person.ResponseModel.ResponseType != EnumResponseType.Success)
@@ -144,9 +155,15 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return response;
         }
 
-        public HistoryResponseModel? Withdraw(string MobileNo, long Amount, string Pin)
+        public HistoryResponseModel Withdraw(string MobileNo, long Amount, string Pin)
         {
             HistoryResponseModel response = new HistoryResponseModel();
+
+            if (Amount > 0)
+            {
+                response.ResponseModel = BaseResponseModel.ValidationError("400", "Amount can't be less than or equal to 0.");
+                goto Result;
+            }
 
             var person = _personService.GetPersonByMobileNo(MobileNo);
             if (person.ResponseModel.ResponseType != EnumResponseType.Success)
@@ -176,9 +193,15 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return response;
         }
 
-        public HistoryResponseModel? Tansfer(string FromMobileNo, string ToMobileNo, long Amount, string Pin)
+        public HistoryResponseModel Tansfer(string FromMobileNo, string ToMobileNo, long Amount, string Pin)
         {
             HistoryResponseModel response = new HistoryResponseModel();
+
+            if (Amount > 0)
+            {
+                response.ResponseModel = BaseResponseModel.ValidationError("400", "Amount can't be less than or equal to 0.");
+                goto Result;
+            }
 
             var person = _personService.GetPersonByMobileNo(FromMobileNo);
             if (person.ResponseModel.ResponseType != EnumResponseType.Success)
@@ -215,7 +238,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return response;
         }
 
-        public PersonResponseModel? ReduceBalance(string MobileNo, long Amount, long minimum)
+        public PersonResponseModel ReduceBalance(string MobileNo, long Amount, long minimum)
         {
             PersonResponseModel response = new PersonResponseModel();
             var person = _personService.GetPersonByMobileNo(MobileNo);
@@ -245,7 +268,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return response;
         }
 
-        public PersonResponseModel? AddBalance(string MobileNo, long Amount)
+        public PersonResponseModel AddBalance(string MobileNo, long Amount)
         {
             PersonResponseModel response = new PersonResponseModel();
             var person = _personService.GetPersonByMobileNo(MobileNo);

@@ -64,14 +64,10 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
 
             var newPerson = _db.TblPeople.Add(person);
             _db.SaveChanges();
-            if (newPerson != null)
-            {
-                response.ResponseModel = BaseResponseModel.Success("001", "Person Created Successfully!");
-                response.Person = person;
-                goto Result;
-            }
-
-            response.ResponseModel = BaseResponseModel.ServerError("999", "Internal Server Error");
+            
+            response.ResponseModel = BaseResponseModel.Success("001", "Person Created Successfully!");
+            response.Person = person;
+            
 
         Result:
             return response;

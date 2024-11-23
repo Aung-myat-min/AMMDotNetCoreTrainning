@@ -17,8 +17,6 @@ namespace MinKpay.API.Controllers
         private readonly PersonService _personService;
         private readonly MiniKpayService _kpayService;
         private readonly AppDbContext _db;          //for development purpose
-        private readonly string mobilePattern = @"^(09|01)[0-9]{6,9}$";
-        private readonly string pinPattern = @"^[0-9]{6}$";
 
         public PersonController()
         {

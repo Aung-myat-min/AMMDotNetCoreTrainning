@@ -7,14 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\AMMDotNetCoreTrainning.Domain\Features\MiniKpay\PersonService.cs" Link="PersonService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.18" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AMMDotNetCoreTrainning.Domain\AMMDotNetCoreTrainning.Domain.csproj" />
     <ProjectReference Include="..\AMMDotNetTrainning.Shared\AMMDotNetTrainning.Shared.csproj" />
-    <ProjectReference Include="..\MiniKPay.Database\MiniKPay.Database.csproj" />
+    <ProjectReference Include="..\MiniKPay.Database\AMMDotNetTrainning.MiniKPay.Database.csproj" />
   </ItemGroup>
 
 </Project>

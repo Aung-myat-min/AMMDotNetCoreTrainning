@@ -20,11 +20,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMMDotNetTrainning.MinimalA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMMDotNetCoreTrainning.Ben10MinimalAPI", "AMMDotNetCoreTrainning.Ben10MinimalAPI\AMMDotNetCoreTrainning.Ben10MinimalAPI.csproj", "{0FA7405A-3CEE-47D0-8718-7EF056748434}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMMDotNetCoreTrainning.Domain", "AMMDotNetCoreTrainning.Domain\AMMDotNetCoreTrainning.Domain.csproj", "{A407885F-AF8B-45B8-A9CD-BF6D66DF9983}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMMDotNetCoreTrainning.Domain", "AMMDotNetCoreTrainning.Domain\AMMDotNetCoreTrainning.Domain.csproj", "{A407885F-AF8B-45B8-A9CD-BF6D66DF9983}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniKPay.Database", "MiniKPay.Database\MiniKPay.Database.csproj", "{53D8E884-B6D0-4116-A93D-801A13CA3EBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMMDotNetTrainning.MiniKPay.Database", "MiniKPay.Database\AMMDotNetTrainning.MiniKPay.Database.csproj", "{53D8E884-B6D0-4116-A93D-801A13CA3EBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniKpay.API", "MinKpayAPI\MiniKpay.API.csproj", "{2A9C7A85-E63D-4941-9EA0-3A23888194FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMMDotNetTrainning.MiniKpay.API", "MinKpayAPI\AMMDotNetTrainning.MiniKpay.API.csproj", "{2A9C7A85-E63D-4941-9EA0-3A23888194FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

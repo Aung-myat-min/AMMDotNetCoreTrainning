@@ -62,6 +62,6 @@ dotnet ef dbcontext scaffold "Server=DESKTOP-KPCHONN\SQLEXPRESS;Database=DotNetT
 
 ## Mini KPay API Base Response Model
 
-> https://github.com/Aung-myat-min/AMMDotNetCoreTrainning/tree/a322df0906b47bb1d78f10d05fde992ad18ac22d
+> https://github.com/Aung-myat-min/AMMDotNetCoreTrainning/tree/86b31fe0b1101600f0382010db65acdc02150cd2
 
 DotNet Trainning Batch 5 By Ko Sann Lynn Htun

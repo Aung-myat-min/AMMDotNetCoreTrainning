@@ -94,6 +94,12 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
+            if (OldPin == NewPin)
+            {
+                response.ResponseModel = BaseResponseModel.Error("400", "New Pin can't be the same with the old pin.");
+                goto Result;
+            }
+
             var person = _personService.GetPersonByMobileNo(MobileNo);
             if (person.ResponseModel.ResponseType != EnumResponseType.Success)
             {
@@ -121,7 +127,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
         {
             HistoryResponseModel response = new HistoryResponseModel();
 
-            if (Amount > 0)
+            if (Amount < 0)
             {
                 response.ResponseModel = BaseResponseModel.ValidationError("400", "Amount can't be less than or equal to 0.");
                 goto Result;
@@ -159,7 +165,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
         {
             HistoryResponseModel response = new HistoryResponseModel();
 
-            if (Amount > 0)
+            if (Amount < 0)
             {
                 response.ResponseModel = BaseResponseModel.ValidationError("400", "Amount can't be less than or equal to 0.");
                 goto Result;
@@ -197,7 +203,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
         {
             HistoryResponseModel response = new HistoryResponseModel();
 
-            if (Amount > 0)
+            if (Amount < 0)
             {
                 response.ResponseModel = BaseResponseModel.ValidationError("400", "Amount can't be less than or equal to 0.");
                 goto Result;
@@ -248,8 +254,8 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
-            person.Person.Balance = person.Person.Balance - Amount;
-            if (person.Balance < minimum)
+            person.Person.Balance = (person.Person.Balance ?? 0) - Amount;
+            if (person.Person.Balance < minimum)
             {
                 response.ResponseModel = BaseResponseModel.Error("400", "Not Enough Balance!");
                 goto Result;
@@ -263,6 +269,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             }
 
             response.ResponseModel = BaseResponseModel.Success("001", "Success!");
+            response.Person = updatedPerson.Person;
 
         Result:
             return response;
@@ -278,7 +285,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
-            person.Balance = person.Balance + Amount;
+            person.Person.Balance = (person.Person.Balance ?? 0) + Amount;
             var updatedPerson = _personService.UpdatePerson(MobileNo, person.Person);
 
             if (updatedPerson.ResponseModel.ResponseType != EnumResponseType.Success)
@@ -288,6 +295,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             }
 
             response.ResponseModel = BaseResponseModel.Success("001", "Success!");
+            response.Person = updatedPerson.Person;
 
         Result:
             return response;

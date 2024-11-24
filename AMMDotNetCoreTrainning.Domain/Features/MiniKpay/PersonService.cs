@@ -112,7 +112,6 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 {
                     item.Person.FullName = person.FullName;
                 }
-                goto Result;
             }
             if (!String.IsNullOrEmpty(person.MobileNo))
             {
@@ -124,7 +123,6 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 {
                     item.ResponseModel = BaseResponseModel.ValidationError("557", "Mobile Number should be \n- 8 digits mimum\n- 11 digits maximum\n- And, should starts from 01 or 09");
                 }
-                goto Result;
             }
             if (!String.IsNullOrEmpty(person.Pin))
             {
@@ -136,7 +134,10 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 {
                     item.ResponseModel = BaseResponseModel.ValidationError("558", "A Pin should be a combination of 6 digits");
                 }
-                goto Result;
+            }
+            if (person.Balance.HasValue && person.Balance > 0)
+            {
+                item.Person.Balance = person.Balance;
             }
 
             _db.Entry(item.Person).State = EntityState.Modified;

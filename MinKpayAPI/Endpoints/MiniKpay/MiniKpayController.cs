@@ -25,45 +25,94 @@ namespace AMMDotNetTrainning.MiniKpay.API.Endpoints.MiniKpay
         [HttpGet("{mobileNo}")]
         public async Task<IActionResult> GetBalance(string mobileNo)
         {
-            var balance = await _kpayService.BalanceCheck(mobileNo);
 
-            return Excute<ResultPersonResponseModel>(balance);
+            try
+            {
+                var balance = await _kpayService.BalanceCheck(mobileNo);
+
+                return Excute<ResultPersonResponseModel>(balance);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPatch("{mobileNo}")]
         public async Task<IActionResult> ChangePin(string mobileNo, string oldPin, string newPin)
         {
-            var success = await _kpayService.ChangePin(mobileNo, oldPin, newPin);
-            return Excute<ResultPersonResponseModel>(success);
+
+            try
+            {
+                var success = await _kpayService.ChangePin(mobileNo, oldPin, newPin);
+                return Excute<ResultPersonResponseModel>(success);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPost("deposit/{mobileNo}/{amount}")]
         public async Task<IActionResult> Deposit(string mobileNo, string pin, long amount)
         {
-            var model = await _kpayService.Deposit(mobileNo, amount, pin);
-            return Excute<ResultHistoryResponseModel>(model);
+
+            try
+            {
+                var model = await _kpayService.Deposit(mobileNo, amount, pin);
+                return Excute<ResultHistoryResponseModel>(model);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPost("withdraw/{mobileNo}/{amount}")]
         public async Task<IActionResult> Withdraw(string mobileNo, string pin, long amount)
         {
 
-            var model = await _kpayService.Withdraw(mobileNo, amount, pin);
-            return Excute<ResultHistoryResponseModel>(model);
+
+            try
+            {
+
+                var model = await _kpayService.Withdraw(mobileNo, amount, pin);
+                return Excute<ResultHistoryResponseModel>(model);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPost("{fromMobileNo}/{toMobileNo}/{amount}")]
         public async Task<IActionResult> Transfer(string fromMobileNo, string toMobileNo, string pin, long amount)
         {
-            var model = await _kpayService.Tansfer(fromMobileNo, toMobileNo, amount, pin);
-            return Excute<ResultHistoryResponseModel>(model);
+
+            try
+            {
+                var model = await _kpayService.Tansfer(fromMobileNo, toMobileNo, amount, pin);
+                return Excute<ResultHistoryResponseModel>(model);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet("history/{mobileNo}")]
         public async Task<IActionResult> GetHistory(string mobileNo)
         {
-            var history = await _historyService.GetHistoryByPerson(mobileNo);
-            return Excute<List<ExtendedHistory>>(history);
+
+            try
+            {
+                var history = await _historyService.GetHistoryByPerson(mobileNo);
+                return Excute<List<ExtendedHistory>>(history);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

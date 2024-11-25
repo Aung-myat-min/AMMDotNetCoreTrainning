@@ -29,57 +29,96 @@ namespace MinKpay.API.Controllers
         [HttpGet]
         public IActionResult GetUsers()
         {
-            var list = _db.TblPeople.AsNoTracking().ToList();
-            return Ok(list);
+            try
+            {
+                var list = _db.TblPeople.AsNoTracking().ToList();
+                return Ok(list);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet("{mobileNo}")]
         public async Task<IActionResult> GetPersonByMobile(string mobileNo)
         {
-            var person = await _personService.GetPersonByMobileNo(mobileNo);
-            return Excute<ResultPersonResponseModel>(person);
+
+            try
+            {
+                var person = await _personService.GetPersonByMobileNo(mobileNo);
+                return Excute<ResultPersonResponseModel>(person);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateNewAccount(TblPerson person)
         {
-            var newUser = await _personService.CreateAccount(person);
-            return Excute<ResultPersonResponseModel>(newUser);
+
+            try
+            {
+                var newUser = await _personService.CreateAccount(person);
+                return Excute<ResultPersonResponseModel>(newUser);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPatch("{mobileNo}/{pin}")]
         public async Task<IActionResult> UpdateDetails(string mobileNo, string pin, TblPerson person)
         {
-            Result<ResultPersonResponseModel> model = new Result<ResultPersonResponseModel>();
-            bool? result = await _kpayService.CheckPin(mobileNo, pin);
-            if (result is null || result == false)
+
+            try
             {
-                model = Result<ResultPersonResponseModel>.Error("Wrong Password or User Not Found!");
-                goto Result;
+                Result<ResultPersonResponseModel> model = new Result<ResultPersonResponseModel>();
+                bool? result = await _kpayService.CheckPin(mobileNo, pin);
+                if (result is null || result == false)
+                {
+                    model = Result<ResultPersonResponseModel>.Error("Wrong Password or User Not Found!");
+                    goto Result;
+                }
+
+                model = await _personService.UpdatePerson(mobileNo, person);
+
+            Result:
+                return Excute<ResultPersonResponseModel>(model);
             }
-
-            model = await _personService.UpdatePerson(mobileNo, person);
-
-        Result:
-            return Excute<ResultPersonResponseModel>(model);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{mobileNo}/{pin}")]
         public async Task<IActionResult> Delete(string mobileNo, string pin)
         {
-            Result<ResultPersonResponseModel> model = new Result<ResultPersonResponseModel>();
-            bool? result = await _kpayService.CheckPin(mobileNo, pin);
-            if (result is null || result == false)
+
+            try
             {
-                model = Result<ResultPersonResponseModel>.Error("Wrong Password or User Not Found!");
-                goto Result;
+                Result<ResultPersonResponseModel> model = new Result<ResultPersonResponseModel>();
+                bool? result = await _kpayService.CheckPin(mobileNo, pin);
+                if (result is null || result == false)
+                {
+                    model = Result<ResultPersonResponseModel>.Error("Wrong Password or User Not Found!");
+                    goto Result;
+                }
+
+                model = await _personService.DeactivatePerson(mobileNo);
+
+
+            Result:
+                return Excute<ResultPersonResponseModel>(model);
             }
-
-            model = await _personService.DeactivatePerson(mobileNo);
-
-
-        Result:
-            return Excute<ResultPersonResponseModel>(model);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

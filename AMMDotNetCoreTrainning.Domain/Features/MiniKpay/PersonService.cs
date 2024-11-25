@@ -51,7 +51,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return result;
         }
 
-        public Result<ResultPersonResponseModel> CreateAccount(TblPerson person)
+        public async Task<Result<ResultPersonResponseModel>> CreateAccount(TblPerson person)
         {
             Result<ResultPersonResponseModel> response = new Result<ResultPersonResponseModel>();
 
@@ -61,8 +61,8 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
-            var newPerson = _db.TblPeople.Add(person);
-            _db.SaveChanges();
+            var newPerson = await _db.TblPeople.AddAsync(person);
+            await _db.SaveChangesAsync();
 
             ResultPersonResponseModel resultPerson = new ResultPersonResponseModel
             {
@@ -74,10 +74,10 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return response;
         }
 
-        public Result<ResultPersonResponseModel> GetPersonByMobileNo(string MobileNo)
+        public async Task<Result<ResultPersonResponseModel>> GetPersonByMobileNo(string MobileNo)
         {
             Result<ResultPersonResponseModel> response = new Result<ResultPersonResponseModel>();
-            var person = _db.TblPeople.AsNoTracking().Where(x => x.DeleteFalg == false && x.MobileNo == MobileNo).FirstOrDefault();
+            var person = await _db.TblPeople.AsNoTracking().Where(x => x.DeleteFalg == false && x.MobileNo == MobileNo).FirstOrDefaultAsync();
             if (person is null)
             {
                 response = Result<ResultPersonResponseModel>.NotFound("Person Not Found!");
@@ -94,9 +94,9 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return response;
         }
 
-        public Result<ResultPersonResponseModel> UpdatePerson(string MobileNo, TblPerson person)
+        public async Task<Result<ResultPersonResponseModel>> UpdatePerson(string MobileNo, TblPerson person)
         {
-            var item = GetPersonByMobileNo(MobileNo);
+            var item = await GetPersonByMobileNo(MobileNo);
             if (item.IsError)
             {
                 goto Result;
@@ -151,7 +151,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             }
 
             _db.Entry(targetedPerson).State = EntityState.Modified;
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             ResultPersonResponseModel result = new ResultPersonResponseModel
             {
@@ -163,9 +163,9 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return item;
         }
 
-        public Result<ResultPersonResponseModel> DeactivatePerson(string MobileNo)
+        public async Task<Result<ResultPersonResponseModel>> DeactivatePerson(string MobileNo)
         {
-            var person = GetPersonByMobileNo(MobileNo);
+            var person = await GetPersonByMobileNo(MobileNo);
             if (person.IsError)
             {
                 goto Result;
@@ -174,7 +174,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             TblPerson targetedPerson = person.Data.Person;
             targetedPerson.DeleteFalg = true;
             _db.Entry(targetedPerson).State = EntityState.Modified;
-            int result = _db.SaveChanges();
+            int result = await _db.SaveChangesAsync();
 
             if (result > 0)
             {

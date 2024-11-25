@@ -21,7 +21,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             _personService = new PersonService();
         }
 
-        public Result<ResultHistoryResponseModel> CreateWithdrawHistory(int PersonId, long Amount, string message)
+        public async Task<Result<ResultHistoryResponseModel>> CreateWithdrawHistory(int PersonId, long Amount, string message)
         {
             Result<ResultHistoryResponseModel> response = new Result<ResultHistoryResponseModel>();
 
@@ -32,8 +32,8 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 ActionType = "Withdraw"
             };
 
-            _db.Add(newHistory);
-            _db.SaveChanges();
+            await _db.AddAsync(newHistory);
+            await _db.SaveChangesAsync();
 
             if (newHistory == null)
             {
@@ -51,7 +51,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return response;
         }
 
-        public Result<ResultHistoryResponseModel> CreateDepositHistory(int PersonId, long Amount, string message)
+        public async Task<Result<ResultHistoryResponseModel>> CreateDepositHistory(int PersonId, long Amount, string message)
         {
             Result<ResultHistoryResponseModel> response = new Result<ResultHistoryResponseModel>();
 
@@ -62,8 +62,8 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 ActionType = "Deposit"
             };
 
-            _db.Add(newHistory);
-            _db.SaveChanges();
+            await _db.AddAsync(newHistory);
+            await _db.SaveChangesAsync();
 
             if (newHistory == null)
             {
@@ -81,7 +81,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return response;
         }
 
-        public Result<ResultHistoryResponseModel> CreateTransferHistory(int FromPersonId, int ToPersonId, long Amount, string message)
+        public async Task<Result<ResultHistoryResponseModel>> CreateTransferHistory(int FromPersonId, int ToPersonId, long Amount, string message)
         {
             Result<ResultHistoryResponseModel> response = new Result<ResultHistoryResponseModel>();
 
@@ -101,9 +101,9 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 ActionType = "GetFromAccount"
             };
 
-            _db.Add(sendHistory);
-            _db.Add(receiveHistory);
-            _db.SaveChanges();
+            await _db.AddAsync(sendHistory);
+            await _db.AddAsync(receiveHistory);
+            await _db.SaveChangesAsync();
 
             if (sendHistory == null || receiveHistory == null)
             {
@@ -121,10 +121,10 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return response;
         }
 
-        public Result<List<ExtendedHistory>> GetHistoryByPerson(string mobileNo)
+        public async Task<Result<List<ExtendedHistory>>> GetHistoryByPerson(string mobileNo)
         {
             Result<List<ExtendedHistory>> response = new Result<List<ExtendedHistory>>();
-            var person = _personService.GetPersonByMobileNo(mobileNo);
+            var person = await _personService.GetPersonByMobileNo(mobileNo);
             if (person.IsNotFound)
             {
                 response = Result<List<ExtendedHistory>>.NotFound("Person Not Found!");
@@ -132,7 +132,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             }
 
             int id = person.Data.Person.PersonId;
-            var list = _db.TblHistories
+            var list = await _db.TblHistories
                 .AsNoTracking()
                 .Where(x => x.FromAccount == id || x.ToAccount == id || x.Account == id)
                 .Select(history => new ExtendedHistory
@@ -156,7 +156,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                         ? history.ToAccountNavigation.MobileNo
                         : null
                 })
-                .ToList();
+                .ToListAsync();
 
             if (list.IsNullOrEmpty())
             {

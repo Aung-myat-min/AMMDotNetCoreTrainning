@@ -22,11 +22,11 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             _historyService = new HistoryService();
         }
 
-        public Result<ResultPersonResponseModel> BalanceCheck(string MobileNo)
+        public async Task<Result<ResultPersonResponseModel>> BalanceCheck(string MobileNo)
         {
             Result<ResultPersonResponseModel> response = new Result<ResultPersonResponseModel>();
 
-            var person = _personService.GetPersonByMobileNo(MobileNo);
+            var person = await _personService.GetPersonByMobileNo(MobileNo);
             if (person.IsError)
             {
                 response = person;
@@ -44,9 +44,9 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return response;
         }
 
-        public bool? CheckPin(string MobileNo, string Pin)
+        public async Task<bool?> CheckPin(string MobileNo, string Pin)
         {
-            var person = _personService.GetPersonByMobileNo(MobileNo);
+            var person = await _personService.GetPersonByMobileNo(MobileNo);
             if (person.Data is null)
             {
                 return null;
@@ -63,17 +63,17 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             }
         }
 
-        public Result<ResultPersonResponseModel> ChangeMobileNo(string OldMobile, string NewMobile, string Pin)
+        public async Task<Result<ResultPersonResponseModel>> ChangeMobileNo(string OldMobile, string NewMobile, string Pin)
         {
             Result<ResultPersonResponseModel> response = new Result<ResultPersonResponseModel>();
-            var isPinCorrect = CheckPin(OldMobile, Pin);
+            var isPinCorrect = await CheckPin(OldMobile, Pin);
             if (isPinCorrect == false || isPinCorrect is null)
             {
                 response = Result<ResultPersonResponseModel>.Error("Wrong Pin");
                 goto Result;
             }
 
-            var person = _personService.GetPersonByMobileNo(OldMobile);
+            var person = await _personService.GetPersonByMobileNo(OldMobile);
             if (person.IsError)
             {
                 response = person;
@@ -81,17 +81,17 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             }
 
             person.Data.Person.MobileNo = NewMobile;
-            response = _personService.UpdatePerson(OldMobile, person.Data.Person);
+            response = await _personService.UpdatePerson(OldMobile, person.Data.Person);
 
         Result:
             return response;
         }
 
-        public Result<ResultPersonResponseModel> ChangePin(string MobileNo, string OldPin, string NewPin)
+        public async Task<Result<ResultPersonResponseModel>> ChangePin(string MobileNo, string OldPin, string NewPin)
         {
             Result<ResultPersonResponseModel> response = new Result<ResultPersonResponseModel>();
 
-            var isPinCorrect = CheckPin(MobileNo, OldPin);
+            var isPinCorrect = await CheckPin(MobileNo, OldPin);
             if (isPinCorrect == false || isPinCorrect is null)
             {
                 response = Result<ResultPersonResponseModel>.Error("Wrong Pin");
@@ -104,7 +104,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
-            var person = _personService.GetPersonByMobileNo(MobileNo);
+            var person = await _personService.GetPersonByMobileNo(MobileNo);
             if (person.IsError)
             {
                 response = person;
@@ -113,7 +113,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
 
             person.Data.Person.Pin = NewPin;
 
-            var updatedPeson = _personService.UpdatePerson(MobileNo, person.Data.Person);
+            var updatedPeson = await _personService.UpdatePerson(MobileNo, person.Data.Person);
             if (updatedPeson.IsError)
             {
                 updatedPeson.Data.Person = default;
@@ -127,7 +127,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return response;
         }
 
-        public Result<ResultHistoryResponseModel> Deposit(string MobileNo, long Amount, string Pin)
+        public async Task<Result<ResultHistoryResponseModel>> Deposit(string MobileNo, long Amount, string Pin)
         {
             Result<ResultHistoryResponseModel> response = new Result<ResultHistoryResponseModel>();
 
@@ -137,35 +137,35 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
-            var person = _personService.GetPersonByMobileNo(MobileNo);
+            var person = await _personService.GetPersonByMobileNo(MobileNo);
             if (person.IsError)
             {
                 response = Result<ResultHistoryResponseModel>.NotFound("Person Not Found!");
                 goto Result;
             }
 
-            var isPinCorrect = CheckPin(MobileNo, Pin);
+            var isPinCorrect = await CheckPin(MobileNo, Pin);
             if (isPinCorrect == false || isPinCorrect is null)
             {
                 response = Result<ResultHistoryResponseModel>.Error("Wrong Password!");
                 goto Result;
             }
 
-            var updatedPerson = AddBalance(MobileNo, Amount);
+            var updatedPerson = await AddBalance(MobileNo, Amount);
             if (updatedPerson.IsError)
             {
                 response = Result<ResultHistoryResponseModel>.Error(person.message);
                 goto Result;
             }
 
-            var history = _historyService.CreateDepositHistory(updatedPerson.Data.Person.PersonId, Amount, "Successful!");
+            var history = await _historyService.CreateDepositHistory(updatedPerson.Data.Person.PersonId, Amount, "Successful!");
             response = history;
 
         Result:
             return response;
         }
 
-        public Result<ResultHistoryResponseModel> Withdraw(string MobileNo, long Amount, string Pin)
+        public async Task<Result<ResultHistoryResponseModel>> Withdraw(string MobileNo, long Amount, string Pin)
         {
             Result<ResultHistoryResponseModel> response = new Result<ResultHistoryResponseModel>();
 
@@ -175,35 +175,35 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
-            var person = _personService.GetPersonByMobileNo(MobileNo);
+            var person = await _personService.GetPersonByMobileNo(MobileNo);
             if (person.IsError)
             {
                 response = Result<ResultHistoryResponseModel>.Error(person.message);
                 goto Result;
             }
 
-            var isPinCorrect = CheckPin(MobileNo, Pin);
+            var isPinCorrect = await CheckPin(MobileNo, Pin);
             if (isPinCorrect == false || isPinCorrect is null)
             {
                 response = Result<ResultHistoryResponseModel>.Error("Wrong Password!");
                 goto Result;
             }
 
-            var updatedPerson = ReduceBalance(MobileNo, Amount, 10000);
+            var updatedPerson = await ReduceBalance(MobileNo, Amount, 10000);
             if (updatedPerson!.IsError)
             {
                 response = Result<ResultHistoryResponseModel>.Error(updatedPerson.message);
                 goto Result;
             }
 
-            var history = _historyService.CreateWithdrawHistory(updatedPerson.Data.Person.PersonId, Amount, "Successful!");
+            var history = await _historyService.CreateWithdrawHistory(updatedPerson.Data.Person.PersonId, Amount, "Successful!");
             response = history;
 
         Result:
             return response;
         }
 
-        public Result<ResultHistoryResponseModel> Tansfer(string FromMobileNo, string ToMobileNo, long Amount, string Pin)
+        public async Task<Result<ResultHistoryResponseModel>> Tansfer(string FromMobileNo, string ToMobileNo, long Amount, string Pin)
         {
             Result<ResultHistoryResponseModel> response = new Result<ResultHistoryResponseModel>();
 
@@ -213,45 +213,45 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
-            var person = _personService.GetPersonByMobileNo(FromMobileNo);
+            var person = await _personService.GetPersonByMobileNo(FromMobileNo);
             if (person.IsError)
             {
                 response = Result<ResultHistoryResponseModel>.Error(person.message);
                 goto Result;
             }
 
-            var isPinCorrect = CheckPin(FromMobileNo, Pin);
+            var isPinCorrect = await CheckPin(FromMobileNo, Pin);
             if (isPinCorrect == false || isPinCorrect is null)
             {
                 response = Result<ResultHistoryResponseModel>.Error("Wrong Password!");
                 goto Result;
             }
 
-            var fromPerson = ReduceBalance(FromMobileNo, Amount, 0);
+            var fromPerson = await ReduceBalance(FromMobileNo, Amount, 0);
             if (fromPerson!.IsError)
             {
                 response = Result<ResultHistoryResponseModel>.Error(fromPerson.message);
                 goto Result;
             }
 
-            var toPerson = AddBalance(ToMobileNo, Amount);
+            var toPerson = await AddBalance(ToMobileNo, Amount);
             if (toPerson.IsError)
             {
                 response = Result<ResultHistoryResponseModel>.Error(toPerson.message);
                 goto Result;
             }
 
-            var history = _historyService.CreateTransferHistory(fromPerson!.Data.Person.PersonId, toPerson!.Data.Person.PersonId, Amount, "Successfully Transferred!");
+            var history = await _historyService.CreateTransferHistory(fromPerson!.Data.Person.PersonId, toPerson!.Data.Person.PersonId, Amount, "Successfully Transferred!");
             response = history!;
 
         Result:
             return response;
         }
 
-        public Result<ResultPersonResponseModel> ReduceBalance(string MobileNo, long Amount, long minimum)
+        public async Task<Result<ResultPersonResponseModel>> ReduceBalance(string MobileNo, long Amount, long minimum)
         {
             Result<ResultPersonResponseModel> response = new Result<ResultPersonResponseModel>();
-            var person = _personService.GetPersonByMobileNo(MobileNo);
+            var person = await _personService.GetPersonByMobileNo(MobileNo);
             if (person.IsError)
             {
                 response = person;
@@ -265,7 +265,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
-            var updatedPerson = _personService.UpdatePerson(MobileNo, person.Data.Person);
+            var updatedPerson = await _personService.UpdatePerson(MobileNo, person.Data.Person);
             if (updatedPerson.IsError)
             {
                 response = updatedPerson;
@@ -279,10 +279,10 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             return response;
         }
 
-        public Result<ResultPersonResponseModel> AddBalance(string MobileNo, long Amount)
+        public async Task<Result<ResultPersonResponseModel>> AddBalance(string MobileNo, long Amount)
         {
             Result<ResultPersonResponseModel> response = new Result<ResultPersonResponseModel>();
-            var person = _personService.GetPersonByMobileNo(MobileNo);
+            var person = await _personService.GetPersonByMobileNo(MobileNo);
             if (person.IsError)
             {
                 response = person;
@@ -290,7 +290,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             }
 
             person.Data.Person.Balance = (person.Data.Person.Balance ?? 0) + Amount;
-            var updatedPerson = _personService.UpdatePerson(MobileNo, person.Data.Person);
+            var updatedPerson = await _personService.UpdatePerson(MobileNo, person.Data.Person);
 
             if (updatedPerson.IsError)
             {

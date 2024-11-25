@@ -23,48 +23,47 @@ namespace AMMDotNetTrainning.MiniKpay.API.Endpoints.MiniKpay
         }
 
         [HttpGet("{mobileNo}")]
-        public IActionResult GetBalance(string mobileNo)
+        public async Task<IActionResult> GetBalance(string mobileNo)
         {
-            var balance = _kpayService.BalanceCheck(mobileNo);
+            var balance = await _kpayService.BalanceCheck(mobileNo);
 
             return Excute<ResultPersonResponseModel>(balance);
         }
 
         [HttpPatch("{mobileNo}")]
-        public IActionResult ChangePin(string mobileNo, string oldPin, string newPin)
+        public async Task<IActionResult> ChangePin(string mobileNo, string oldPin, string newPin)
         {
-            var success = _kpayService.ChangePin(mobileNo, oldPin, newPin);
+            var success = await _kpayService.ChangePin(mobileNo, oldPin, newPin);
             return Excute<ResultPersonResponseModel>(success);
         }
 
         [HttpPost("deposit/{mobileNo}/{amount}")]
-        public IActionResult Deposit(string mobileNo, string pin, long amount)
+        public async Task<IActionResult> Deposit(string mobileNo, string pin, long amount)
         {
-            var model = _kpayService.Deposit(mobileNo, amount, pin);
+            var model = await _kpayService.Deposit(mobileNo, amount, pin);
             return Excute<ResultHistoryResponseModel>(model);
         }
 
         [HttpPost("withdraw/{mobileNo}/{amount}")]
-        public IActionResult Withdraw(string mobileNo, string pin, long amount)
+        public async Task<IActionResult> Withdraw(string mobileNo, string pin, long amount)
         {
 
-            var model = _kpayService.Withdraw(mobileNo, amount, pin);
+            var model = await _kpayService.Withdraw(mobileNo, amount, pin);
             return Excute<ResultHistoryResponseModel>(model);
         }
 
         [HttpPost("{fromMobileNo}/{toMobileNo}/{amount}")]
-        public IActionResult Transfer(string fromMobileNo, string toMobileNo, string pin, long amount)
+        public async Task<IActionResult> Transfer(string fromMobileNo, string toMobileNo, string pin, long amount)
         {
-            var model = _kpayService.Tansfer(fromMobileNo, toMobileNo, amount, pin);
+            var model = await _kpayService.Tansfer(fromMobileNo, toMobileNo, amount, pin);
             return Excute<ResultHistoryResponseModel>(model);
         }
 
         [HttpGet("history/{mobileNo}")]
-        public IActionResult GetHistory(string mobileNo)
+        public async Task<IActionResult> GetHistory(string mobileNo)
         {
-            var history = _historyService.GetHistoryByPerson(mobileNo);
+            var history = await _historyService.GetHistoryByPerson(mobileNo);
             return Excute<List<ExtendedHistory>>(history);
         }
     }
 }
-    

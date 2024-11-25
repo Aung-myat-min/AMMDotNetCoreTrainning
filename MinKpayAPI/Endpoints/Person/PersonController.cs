@@ -34,48 +34,48 @@ namespace MinKpay.API.Controllers
         }
 
         [HttpGet("{mobileNo}")]
-        public IActionResult GetPersonByMobile(string mobileNo)
+        public async Task<IActionResult> GetPersonByMobile(string mobileNo)
         {
-            var person = _personService.GetPersonByMobileNo(mobileNo);
+            var person = await _personService.GetPersonByMobileNo(mobileNo);
             return Excute<ResultPersonResponseModel>(person);
         }
 
         [HttpPost]
-        public IActionResult CreateNewAccount(TblPerson person)
+        public async Task<IActionResult> CreateNewAccount(TblPerson person)
         {
-            var newUser = _personService.CreateAccount(person);
+            var newUser = await _personService.CreateAccount(person);
             return Excute<ResultPersonResponseModel>(newUser);
         }
 
         [HttpPatch("{mobileNo}/{pin}")]
-        public IActionResult UpdateDetails(string mobileNo, string pin, TblPerson person)
+        public async Task<IActionResult> UpdateDetails(string mobileNo, string pin, TblPerson person)
         {
             Result<ResultPersonResponseModel> model = new Result<ResultPersonResponseModel>();
-            bool? result = _kpayService.CheckPin(mobileNo, pin);
+            bool? result = await _kpayService.CheckPin(mobileNo, pin);
             if (result is null || result == false)
             {
                 model = Result<ResultPersonResponseModel>.Error("Wrong Password or User Not Found!");
                 goto Result;
             }
 
-            model = _personService.UpdatePerson(mobileNo, person);
+            model = await _personService.UpdatePerson(mobileNo, person);
 
         Result:
             return Excute<ResultPersonResponseModel>(model);
         }
 
         [HttpDelete("{mobileNo}/{pin}")]
-        public IActionResult Delete(string mobileNo, string pin)
+        public async Task<IActionResult> Delete(string mobileNo, string pin)
         {
             Result<ResultPersonResponseModel> model = new Result<ResultPersonResponseModel>();
-            bool? result = _kpayService.CheckPin(mobileNo, pin);
+            bool? result = await _kpayService.CheckPin(mobileNo, pin);
             if (result is null || result == false)
             {
                 model = Result<ResultPersonResponseModel>.Error("Wrong Password or User Not Found!");
                 goto Result;
             }
 
-            model = _personService.DeactivatePerson(mobileNo);
+            model = await _personService.DeactivatePerson(mobileNo);
 
 
         Result:

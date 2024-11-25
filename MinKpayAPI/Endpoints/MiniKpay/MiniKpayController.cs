@@ -27,21 +27,21 @@ namespace AMMDotNetTrainning.MiniKpay.API.Endpoints.MiniKpay
         {
             var balance = _kpayService.BalanceCheck(mobileNo);
 
-            return Excute(balance);
+            return Excute<ResultPersonResponseModel>(balance);
         }
 
         [HttpPatch("{mobileNo}")]
         public IActionResult ChangePin(string mobileNo, string oldPin, string newPin)
         {
             var success = _kpayService.ChangePin(mobileNo, oldPin, newPin);
-            return Excute(success);
+            return Excute<ResultPersonResponseModel>(success);
         }
 
         [HttpPost("deposit/{mobileNo}/{amount}")]
         public IActionResult Deposit(string mobileNo, string pin, long amount)
         {
             var model = _kpayService.Deposit(mobileNo, amount, pin);
-            return Excute(model);
+            return Excute<ResultHistoryResponseModel>(model);
         }
 
         [HttpPost("withdraw/{mobileNo}/{amount}")]
@@ -49,21 +49,22 @@ namespace AMMDotNetTrainning.MiniKpay.API.Endpoints.MiniKpay
         {
 
             var model = _kpayService.Withdraw(mobileNo, amount, pin);
-            return Excute(model);
+            return Excute<ResultHistoryResponseModel>(model);
         }
 
         [HttpPost("{fromMobileNo}/{toMobileNo}/{amount}")]
         public IActionResult Transfer(string fromMobileNo, string toMobileNo, string pin, long amount)
         {
             var model = _kpayService.Tansfer(fromMobileNo, toMobileNo, amount, pin);
-            return Excute(model);
+            return Excute<ResultHistoryResponseModel>(model);
         }
 
         [HttpGet("history/{mobileNo}")]
         public IActionResult GetHistory(string mobileNo)
         {
             var history = _historyService.GetHistoryByPerson(mobileNo);
-            return Excute(history);
+            return Excute<List<ExtendedHistory>>(history);
         }
     }
 }
+    

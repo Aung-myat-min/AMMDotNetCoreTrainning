@@ -47,7 +47,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
         public bool? CheckPin(string MobileNo, string Pin)
         {
             var person = _personService.GetPersonByMobileNo(MobileNo);
-            if (person == null)
+            if (person.Data is null)
             {
                 return null;
             }
@@ -196,7 +196,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
-            var history = _historyService.CreateDepositHistory(updatedPerson.Data.Person.PersonId, Amount, "Successful!");
+            var history = _historyService.CreateWithdrawHistory(updatedPerson.Data.Person.PersonId, Amount, "Successful!");
             response = history;
 
         Result:
@@ -272,7 +272,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 goto Result;
             }
 
-            ResultPersonResponseModel result = new ResultPersonResponseModel { Balance = updatedPerson.Data.Person.Balance };
+            ResultPersonResponseModel result = new ResultPersonResponseModel { Person = updatedPerson.Data.Person, Balance = updatedPerson.Data.Person.Balance };
             response = Result<ResultPersonResponseModel>.Success("Success!", result);
 
         Result:
@@ -300,6 +300,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
 
             ResultPersonResponseModel result = new ResultPersonResponseModel
             {
+                Person = person.Data.Person,
                 Balance = person.Data.Person.Balance
             };
             response = Result<ResultPersonResponseModel>.Success("Success!", result);

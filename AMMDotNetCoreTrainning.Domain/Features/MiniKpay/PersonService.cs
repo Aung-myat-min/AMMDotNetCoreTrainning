@@ -114,6 +114,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 if (person.FullName.Length < 4)
                 {
                     item = Result<ResultPersonResponseModel>.ValidationError("Full name should be 4 characters minimum.");
+                    goto Result;
                 }
                 else
                 {
@@ -129,6 +130,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 else
                 {
                     item = Result<ResultPersonResponseModel>.ValidationError("Mobile Number should be \n- 8 digits mimum\n- 11 digits maximum\n- And, should starts from 01 or 09");
+                    goto Result;
                 }
             }
             if (!String.IsNullOrEmpty(person.Pin))
@@ -140,6 +142,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 else
                 {
                     item = Result<ResultPersonResponseModel>.ValidationError("A Pin should be a combination of 6 digits");
+                    goto Result;
                 }
             }
             if (person.Balance.HasValue && person.Balance > 0)
@@ -173,7 +176,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             _db.Entry(targetedPerson).State = EntityState.Modified;
             int result = _db.SaveChanges();
 
-            if (result < 0)
+            if (result > 0)
             {
                 person = Result<ResultPersonResponseModel>.Success("Person Deactivated!");
                 goto Result;

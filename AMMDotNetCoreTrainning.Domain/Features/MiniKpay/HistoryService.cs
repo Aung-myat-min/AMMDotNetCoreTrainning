@@ -21,9 +21,9 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             _personService = new PersonService();
         }
 
-        public HistoryResponseModel CreateWithdrawHistory(int PersonId, long Amount, string message)
+        public Result<ResultHistoryResponseModel> CreateWithdrawHistory(int PersonId, long Amount, string message)
         {
-            HistoryResponseModel response = new HistoryResponseModel();
+            Result<ResultHistoryResponseModel> response = new Result<ResultHistoryResponseModel>();
 
             var newHistory = new TblHistory
             {
@@ -37,20 +37,23 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
 
             if (newHistory == null)
             {
-                response.ResponseModel = BaseResponseModel.ServerError("999", "Internal Server Error");
+                response = Result<ResultHistoryResponseModel>.Error("History Creation Failed!");
                 goto Result;
             }
 
-            response.ResponseModel = BaseResponseModel.Success("001", message);
-            response.History = newHistory;
+            ResultHistoryResponseModel result = new ResultHistoryResponseModel
+            {
+                History = newHistory
+            };
+            response = Result<ResultHistoryResponseModel>.Success("History, ", result);
 
         Result:
             return response;
         }
 
-        public HistoryResponseModel CreateDepositHistory(int PersonId, long Amount, string message)
+        public Result<ResultHistoryResponseModel> CreateDepositHistory(int PersonId, long Amount, string message)
         {
-            HistoryResponseModel response = new HistoryResponseModel();
+            Result<ResultHistoryResponseModel> response = new Result<ResultHistoryResponseModel>();
 
             var newHistory = new TblHistory
             {
@@ -64,20 +67,23 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
 
             if (newHistory == null)
             {
-                response.ResponseModel = BaseResponseModel.ServerError("999", "Internal Server Error");
+                response = Result<ResultHistoryResponseModel>.Error("History Creation Failed!");
                 goto Result;
             }
 
-            response.ResponseModel = BaseResponseModel.Success("001", message);
-            response.History = newHistory;
+            ResultHistoryResponseModel result = new ResultHistoryResponseModel
+            {
+                History = newHistory
+            };
+            response = Result<ResultHistoryResponseModel>.Success("History, ", result);
 
         Result:
             return response;
         }
 
-        public HistoryResponseModel? CreateTransferHistory(int FromPersonId, int ToPersonId, long Amount, string message)
+        public Result<ResultHistoryResponseModel> CreateTransferHistory(int FromPersonId, int ToPersonId, long Amount, string message)
         {
-            HistoryResponseModel response = new HistoryResponseModel();
+            Result<ResultHistoryResponseModel> response = new Result<ResultHistoryResponseModel>();
 
             var sendHistory = new TblHistory
             {
@@ -101,28 +107,31 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
 
             if (sendHistory == null || receiveHistory == null)
             {
-                response.ResponseModel = BaseResponseModel.ServerError("999", "Internal Server Error");
+                response = Result<ResultHistoryResponseModel>.Error("History Creation Failed!");
                 goto Result;
             }
 
-            response.ResponseModel = BaseResponseModel.Success("001", message);
-            response.History = sendHistory;
+            ResultHistoryResponseModel result = new ResultHistoryResponseModel
+            {
+                History = sendHistory
+            };
+            response = Result<ResultHistoryResponseModel>.Success("History, ", result);
 
         Result:
             return response;
         }
 
-        public HistoryResponseModel GetHistoryByPerson(string mobileNo)
+        public Result<List<ExtendedHistory>> GetHistoryByPerson(string mobileNo)
         {
-            HistoryResponseModel response = new HistoryResponseModel();
+            Result<List<ExtendedHistory>> response = new Result<List<ExtendedHistory>>();
             var person = _personService.GetPersonByMobileNo(mobileNo);
-            if (person.ResponseModel.ResponseType == EnumResponseType.NotFound)
+            if (person.IsNotFound)
             {
-                response.ResponseModel = BaseResponseModel.NotFound("404", "Person not found!");
+                response = Result<List<ExtendedHistory>>.NotFound("Person Not Found!");
                 goto Result;
             }
 
-            int id = person.Person.PersonId;
+            int id = person.Data.Person.PersonId;
             var list = _db.TblHistories
                 .AsNoTracking()
                 .Where(x => x.FromAccount == id || x.ToAccount == id || x.Account == id)
@@ -151,12 +160,12 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
 
             if (list.IsNullOrEmpty())
             {
-                response.ResponseModel = BaseResponseModel.NotFound("404", "Your History is empty!");
+                response = Result<List<ExtendedHistory>>.NotFound("Your Transition History is empty!");
                 goto Result;
             }
 
-            response.ResponseModel = BaseResponseModel.Success("001", "Here are your histories");
-            response.Histories = list;
+            List<ExtendedHistory> histories = list;
+            response = Result<List<ExtendedHistory>>.Success("Here are your Transition Histories!", histories);
 
         Result:
             return response;

@@ -13,3 +13,9 @@ public class PersonResponseModel
     public TblPerson Person { get; set; }
     public long? Balance { get; set; }
 }
+
+public class ResultPersonResponseModel
+{
+    public TblPerson Person { get; set; }
+    public long? Balance { get; set; }
+}

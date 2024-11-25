@@ -22,19 +22,23 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             _historyService = new HistoryService();
         }
 
-        public PersonResponseModel BalanceCheck(string MobileNo)
+        public Result<ResultPersonResponseModel> BalanceCheck(string MobileNo)
         {
-            PersonResponseModel response = new PersonResponseModel();
+            Result<ResultPersonResponseModel> response = new Result<ResultPersonResponseModel>();
 
             var person = _personService.GetPersonByMobileNo(MobileNo);
-            if (person.ResponseModel.ResponseType != EnumResponseType.Success)
+            if (person.IsError)
             {
                 response = person;
                 goto Result;
             }
 
-            response.ResponseModel = BaseResponseModel.Success("001", "Here is your balance...");
-            response.Balance = person.Person.Balance;
+            ResultPersonResponseModel result = new ResultPersonResponseModel
+            {
+                Person = default,
+                Balance = person.Data.Person.Balance,
+            };
+            response = Result<ResultPersonResponseModel>.Success("Here is your balance...", result);
 
         Result:
             return response;
@@ -48,7 +52,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
                 return null;
             }
 
-            var pin = person.Person.Pin;
+            var pin = person.Data.Person.Pin;
             if (String.Equals(pin, Pin))
             {
                 return true;
@@ -59,243 +63,246 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay
             }
         }
 
-        public PersonResponseModel ChangeMobileNo(string OldMobile, string NewMobile, string Pin)
+        public Result<ResultPersonResponseModel> ChangeMobileNo(string OldMobile, string NewMobile, string Pin)
         {
-            PersonResponseModel response = new PersonResponseModel();
+            Result<ResultPersonResponseModel> response = new Result<ResultPersonResponseModel>();
             var isPinCorrect = CheckPin(OldMobile, Pin);
             if (isPinCorrect == false || isPinCorrect is null)
             {
-                response.ResponseModel = BaseResponseModel.Error("400", "Wrong Password!");
+                response = Result<ResultPersonResponseModel>.Error("Wrong Pin");
                 goto Result;
             }
 
             var person = _personService.GetPersonByMobileNo(OldMobile);
-            if (person.ResponseModel.ResponseType != EnumResponseType.Success)
+            if (person.IsError)
             {
                 response = person;
                 goto Result;
             }
 
-            person.Person.MobileNo = NewMobile;
-            response = _personService.UpdatePerson(OldMobile, person.Person);
+            person.Data.Person.MobileNo = NewMobile;
+            response = _personService.UpdatePerson(OldMobile, person.Data.Person);
 
         Result:
             return response;
         }
 
-        public PersonResponseModel ChangePin(string MobileNo, string OldPin, string NewPin)
+        public Result<ResultPersonResponseModel> ChangePin(string MobileNo, string OldPin, string NewPin)
         {
-            PersonResponseModel response = new PersonResponseModel();
+            Result<ResultPersonResponseModel> response = new Result<ResultPersonResponseModel>();
 
             var isPinCorrect = CheckPin(MobileNo, OldPin);
             if (isPinCorrect == false || isPinCorrect is null)
             {
-                response.ResponseModel = BaseResponseModel.Error("400", "Wrong Pin!");
+                response = Result<ResultPersonResponseModel>.Error("Wrong Pin");
                 goto Result;
             }
 
             if (OldPin == NewPin)
             {
-                response.ResponseModel = BaseResponseModel.Error("400", "New Pin can't be the same with the old pin.");
+                response = Result<ResultPersonResponseModel>.Error("New Pin can't be the same with the old pin.");
                 goto Result;
             }
 
             var person = _personService.GetPersonByMobileNo(MobileNo);
-            if (person.ResponseModel.ResponseType != EnumResponseType.Success)
+            if (person.IsError)
             {
                 response = person;
                 goto Result;
             }
 
-            person.Person.Pin = NewPin;
+            person.Data.Person.Pin = NewPin;
 
-            var updatedPeson = _personService.UpdatePerson(MobileNo, person.Person);
-            if (updatedPeson.ResponseModel.ResponseType != EnumResponseType.Success)
+            var updatedPeson = _personService.UpdatePerson(MobileNo, person.Data.Person);
+            if (updatedPeson.IsError)
             {
+                updatedPeson.Data.Person = default;
                 response = updatedPeson;
-                updatedPeson.Person = default;
                 goto Result;
             }
 
-            response.ResponseModel = BaseResponseModel.Success("001", "Pin changed successfully!");
+            response = Result<ResultPersonResponseModel>.Success("Pin Changed Successfully!");
 
         Result:
             return response;
         }
 
-        public HistoryResponseModel Deposit(string MobileNo, long Amount, string Pin)
+        public Result<ResultHistoryResponseModel> Deposit(string MobileNo, long Amount, string Pin)
         {
-            HistoryResponseModel response = new HistoryResponseModel();
+            Result<ResultHistoryResponseModel> response = new Result<ResultHistoryResponseModel>();
 
             if (Amount < 0)
             {
-                response.ResponseModel = BaseResponseModel.ValidationError("400", "Amount can't be less than or equal to 0.");
+                response = Result<ResultHistoryResponseModel>.ValidationError("Amount can't be less than or equal to 0.");
                 goto Result;
             }
 
             var person = _personService.GetPersonByMobileNo(MobileNo);
-            if (person.ResponseModel.ResponseType != EnumResponseType.Success)
+            if (person.IsError)
             {
-                response.ResponseModel = person.ResponseModel;
+                response = Result<ResultHistoryResponseModel>.NotFound("Person Not Found!");
                 goto Result;
             }
 
             var isPinCorrect = CheckPin(MobileNo, Pin);
             if (isPinCorrect == false || isPinCorrect is null)
             {
-                response.ResponseModel = BaseResponseModel.Error("400", "Wrong Password!");
+                response = Result<ResultHistoryResponseModel>.Error("Wrong Password!");
                 goto Result;
             }
 
             var updatedPerson = AddBalance(MobileNo, Amount);
-            if (updatedPerson!.ResponseModel.ResponseType != EnumResponseType.Success)
+            if (updatedPerson.IsError)
             {
-                response.ResponseModel = updatedPerson.ResponseModel;
+                response = Result<ResultHistoryResponseModel>.Error(person.message);
                 goto Result;
             }
 
-            var history = _historyService.CreateDepositHistory(updatedPerson.Person.PersonId, Amount, "Successful!");
+            var history = _historyService.CreateDepositHistory(updatedPerson.Data.Person.PersonId, Amount, "Successful!");
             response = history;
 
         Result:
             return response;
         }
 
-        public HistoryResponseModel Withdraw(string MobileNo, long Amount, string Pin)
+        public Result<ResultHistoryResponseModel> Withdraw(string MobileNo, long Amount, string Pin)
         {
-            HistoryResponseModel response = new HistoryResponseModel();
+            Result<ResultHistoryResponseModel> response = new Result<ResultHistoryResponseModel>();
 
             if (Amount < 0)
             {
-                response.ResponseModel = BaseResponseModel.ValidationError("400", "Amount can't be less than or equal to 0.");
+                response = Result<ResultHistoryResponseModel>.ValidationError("Amount can't be less than or equal to 0.");
                 goto Result;
             }
 
             var person = _personService.GetPersonByMobileNo(MobileNo);
-            if (person.ResponseModel.ResponseType != EnumResponseType.Success)
+            if (person.IsError)
             {
-                response.ResponseModel = person.ResponseModel;
+                response = Result<ResultHistoryResponseModel>.Error(person.message);
                 goto Result;
             }
 
             var isPinCorrect = CheckPin(MobileNo, Pin);
             if (isPinCorrect == false || isPinCorrect is null)
             {
-                response.ResponseModel = BaseResponseModel.Error("400", "Wrong Password!");
+                response = Result<ResultHistoryResponseModel>.Error("Wrong Password!");
                 goto Result;
             }
 
             var updatedPerson = ReduceBalance(MobileNo, Amount, 10000);
-            if (updatedPerson!.ResponseModel.ResponseType != EnumResponseType.Success)
+            if (updatedPerson!.IsError)
             {
-                response.ResponseModel = updatedPerson.ResponseModel;
+                response = Result<ResultHistoryResponseModel>.Error(updatedPerson.message);
                 goto Result;
             }
 
-            var history = _historyService.CreateDepositHistory(updatedPerson.Person.PersonId, Amount, "Successful!");
+            var history = _historyService.CreateDepositHistory(updatedPerson.Data.Person.PersonId, Amount, "Successful!");
             response = history;
 
         Result:
             return response;
         }
 
-        public HistoryResponseModel Tansfer(string FromMobileNo, string ToMobileNo, long Amount, string Pin)
+        public Result<ResultHistoryResponseModel> Tansfer(string FromMobileNo, string ToMobileNo, long Amount, string Pin)
         {
-            HistoryResponseModel response = new HistoryResponseModel();
+            Result<ResultHistoryResponseModel> response = new Result<ResultHistoryResponseModel>();
 
             if (Amount < 0)
             {
-                response.ResponseModel = BaseResponseModel.ValidationError("400", "Amount can't be less than or equal to 0.");
+                response = Result<ResultHistoryResponseModel>.ValidationError("Amount can't be less than or equal to 0.");
                 goto Result;
             }
 
             var person = _personService.GetPersonByMobileNo(FromMobileNo);
-            if (person.ResponseModel.ResponseType != EnumResponseType.Success)
+            if (person.IsError)
             {
-                response.ResponseModel = person.ResponseModel;
+                response = Result<ResultHistoryResponseModel>.Error(person.message);
                 goto Result;
             }
 
             var isPinCorrect = CheckPin(FromMobileNo, Pin);
             if (isPinCorrect == false || isPinCorrect is null)
             {
-                response.ResponseModel = BaseResponseModel.Error("400", "Wrong Password!");
+                response = Result<ResultHistoryResponseModel>.Error("Wrong Password!");
                 goto Result;
             }
 
             var fromPerson = ReduceBalance(FromMobileNo, Amount, 0);
-            if (fromPerson!.ResponseModel.ResponseType != EnumResponseType.Success)
+            if (fromPerson!.IsError)
             {
-                response.ResponseModel = fromPerson.ResponseModel;
+                response = Result<ResultHistoryResponseModel>.Error(fromPerson.message);
                 goto Result;
             }
 
             var toPerson = AddBalance(ToMobileNo, Amount);
-            if (toPerson!.ResponseModel.ResponseType != EnumResponseType.Success)
+            if (toPerson.IsError)
             {
-                response.ResponseModel = toPerson.ResponseModel;
+                response = Result<ResultHistoryResponseModel>.Error(toPerson.message);
                 goto Result;
             }
 
-            var history = _historyService.CreateTransferHistory(fromPerson!.Person.PersonId, toPerson!.Person.PersonId, Amount, "Successfully Transferred!");
+            var history = _historyService.CreateTransferHistory(fromPerson!.Data.Person.PersonId, toPerson!.Data.Person.PersonId, Amount, "Successfully Transferred!");
             response = history!;
 
         Result:
             return response;
         }
 
-        public PersonResponseModel ReduceBalance(string MobileNo, long Amount, long minimum)
+        public Result<ResultPersonResponseModel> ReduceBalance(string MobileNo, long Amount, long minimum)
         {
-            PersonResponseModel response = new PersonResponseModel();
+            Result<ResultPersonResponseModel> response = new Result<ResultPersonResponseModel>();
             var person = _personService.GetPersonByMobileNo(MobileNo);
-            if (person.ResponseModel.ResponseType != EnumResponseType.Success)
+            if (person.IsError)
             {
                 response = person;
                 goto Result;
             }
 
-            person.Person.Balance = (person.Person.Balance ?? 0) - Amount;
-            if (person.Person.Balance < minimum)
+            person.Data.Person.Balance = (person.Data.Person.Balance ?? 0) - Amount;
+            if (person.Data.Person.Balance < minimum)
             {
-                response.ResponseModel = BaseResponseModel.Error("400", "Not Enough Balance!");
+                response = Result<ResultPersonResponseModel>.Error("Not Enough Balance!");
                 goto Result;
             }
 
-            var updatedPerson = _personService.UpdatePerson(MobileNo, person.Person);
-            if (updatedPerson.ResponseModel.ResponseType != EnumResponseType.Success)
+            var updatedPerson = _personService.UpdatePerson(MobileNo, person.Data.Person);
+            if (updatedPerson.IsError)
             {
                 response = updatedPerson;
                 goto Result;
             }
 
-            response.ResponseModel = BaseResponseModel.Success("001", "Success!");
-            response.Person = updatedPerson.Person;
+            ResultPersonResponseModel result = new ResultPersonResponseModel { Balance = updatedPerson.Data.Person.Balance };
+            response = Result<ResultPersonResponseModel>.Success("Success!", result);
 
         Result:
             return response;
         }
 
-        public PersonResponseModel AddBalance(string MobileNo, long Amount)
+        public Result<ResultPersonResponseModel> AddBalance(string MobileNo, long Amount)
         {
-            PersonResponseModel response = new PersonResponseModel();
+            Result<ResultPersonResponseModel> response = new Result<ResultPersonResponseModel>();
             var person = _personService.GetPersonByMobileNo(MobileNo);
-            if (person.ResponseModel.ResponseType != EnumResponseType.Success)
+            if (person.IsError)
             {
                 response = person;
                 goto Result;
             }
 
-            person.Person.Balance = (person.Person.Balance ?? 0) + Amount;
-            var updatedPerson = _personService.UpdatePerson(MobileNo, person.Person);
+            person.Data.Person.Balance = (person.Data.Person.Balance ?? 0) + Amount;
+            var updatedPerson = _personService.UpdatePerson(MobileNo, person.Data.Person);
 
-            if (updatedPerson.ResponseModel.ResponseType != EnumResponseType.Success)
+            if (updatedPerson.IsError)
             {
                 response = updatedPerson;
                 goto Result;
             }
 
-            response.ResponseModel = BaseResponseModel.Success("001", "Success!");
-            response.Person = updatedPerson.Person;
+            ResultPersonResponseModel result = new ResultPersonResponseModel
+            {
+                Balance = person.Data.Person.Balance
+            };
+            response = Result<ResultPersonResponseModel>.Success("Success!", result);
 
         Result:
             return response;

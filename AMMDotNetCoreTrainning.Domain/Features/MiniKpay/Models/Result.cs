@@ -13,6 +13,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.MiniKpay.Models
         public bool IsValidationError { get { return Type == EnumResponseType.ValidationError; } }
         public bool IsServerError { get { return Type == EnumResponseType.ServerError; } }
         public bool IsNormalError { get { return Type == EnumResponseType.Error; } }
+        public bool IsNotFound { get { return Type == EnumResponseType.NotFound; } }
         private EnumResponseType Type { get; set; }
         public T Data { get; set; }
         public string message { get; set; }

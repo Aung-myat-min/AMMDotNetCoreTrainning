@@ -26,6 +26,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMMDotNetTrainning.MiniKPay
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMMDotNetTrainning.MiniKpay.API", "MinKpayAPI\AMMDotNetTrainning.MiniKpay.API.csproj", "{2A9C7A85-E63D-4941-9EA0-3A23888194FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMMDotNetCoreTrainning.Console3", "AMMDotNetCoreTrainning.Console3\AMMDotNetCoreTrainning.Console3.csproj", "{83B557E8-B570-4163-B7C3-E4590BC8D944}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,10 @@ Global
 		{2A9C7A85-E63D-4941-9EA0-3A23888194FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A9C7A85-E63D-4941-9EA0-3A23888194FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A9C7A85-E63D-4941-9EA0-3A23888194FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83B557E8-B570-4163-B7C3-E4590BC8D944}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83B557E8-B570-4163-B7C3-E4590BC8D944}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83B557E8-B570-4163-B7C3-E4590BC8D944}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83B557E8-B570-4163-B7C3-E4590BC8D944}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

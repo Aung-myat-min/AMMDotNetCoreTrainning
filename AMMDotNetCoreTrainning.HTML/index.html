@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML CSS JQuery</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="p-5">
+    <h1>Your Blogs</h1>
+    <div class="container p-5 w-50 border border-3 border-dark rounded-3">
+      <div class="d-flex flex-row align-items-center mb-3">
+        <label for="title" class="text-nowrap px-4">Blog Title: </label>
+        <input type="text" id="title" class="form-control" />
+      </div>
+      <div class="d-flex flex-row align-items-center mb-3">
+        <label for="author" class="text-nowrap px-4">Blog Author: </label>
+        <input type="text" id="author" class="form-control" />
+      </div>
+      <div class="d-flex flex-row align-items-start">
+        <label for="content" class="text-nowrap px-4">Blog Content: </label>
+        <textarea type="text" id="content" class="form-control"></textarea>
+      </div>
+      <button type="button" class="btn btn-danger" id="cancelBtn">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-success" id="saveBtn">Save</button>
+    </div>
+    <div class="container mt-4">
+      <div class="row" id="blogList"></div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      let blogs;
+      let editingBlogId;
+
+      function resetForm() {
+        $("#title").val("");
+        $("#author").val("");
+        $("#content").val("");
+      }
+
+      function loadBlogs() {
+        let lst = localStorage.getItem("blogs");
+        if (lst) {
+          blogs = JSON.parse(lst);
+        } else {
+          blogs = [];
+        }
+      }
+
+      function renderBlogs() {
+        let container = $("#blogList");
+        container.empty();
+        blogs.forEach((blog) => {
+          let card = `
+            <div class="col-sm-6 mb-3">
+                <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">${blog.title}</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">
+                    ${blog.author}
+                    </h6>
+                    <p class="card-text">
+                    ${blog.content}
+                    </p>
+                    <button type="button" class="btn btn-warning editBtn"  data-blog-id="${blog.id}">
+                    Edit
+                    </button>
+                    <button type="button" class="btn btn-danger deleteBtn"  data-blog-id="${blog.id}">
+                    Delete
+                    </button>
+                </div>
+                </div>
+            </div>
+            `;
+          container.append(card);
+        });
+      }
+
+      function editBlog(id) {
+        editingBlogId = id;
+        let blog = blogs.find((blog) => blog.id === id);
+        fillForm(blog);
+      }
+
+      function generateUID() {
+        var firstPart = (Math.random() * 46656) | 0;
+        var secondPart = (Math.random() * 46656) | 0;
+        firstPart = ("000" + firstPart.toString(36)).slice(-3);
+        secondPart = ("000" + secondPart.toString(36)).slice(-3);
+        return firstPart + secondPart;
+      }
+
+      function getData() {
+        let title = $("#title").val();
+        let author = $("#author").val();
+        let content = $("#content").val();
+        return { title, author, content };
+      }
+
+      function saveBlogs() {
+        let { title, author, content } = getData();
+
+        if (editingBlogId) {
+          let blog = blogs.find((blog) => blog.id === editingBlogId);
+          blog.title = title;
+          blog.author = author;
+          blog.content = content;
+          localStorage.setItem("blogs", JSON.stringify(blogs));
+          alert("Blog Updated!");
+        } else {
+          let id = generateUID();
+          blogs.push({ id, title, author, content });
+          localStorage.setItem("blogs", JSON.stringify(blogs));
+          alert("Blog Created!");
+        }
+        editingBlogId = null;
+        resetForm();
+        renderBlogs();
+      }
+
+      function fillForm(blog) {
+        $("#title").val(blog.title);
+        $("#author").val(blog.author);
+        $("#content").val(blog.content);
+      }
+
+      function deleteBlog(id) {
+        let index = blogs.findIndex((blog) => blog.id === id);
+        blogs.splice(index, 1);
+        localStorage.setItem("blogs", JSON.stringify(blogs));
+        renderBlogs();
+        alert("Blog Deleted!");
+      }
+
+      $(document).ready(function () {
+        loadBlogs();
+        renderBlogs();
+
+        $("#saveBtn").click(function () {
+          saveBlogs();
+          loadBlogs();
+        });
+
+        $("#cancelBtn").click(resetForm());
+
+        $(".editBtn").click(function () {
+          let id = $(this).data("blog-id");
+          editBlog(id);
+        });
+
+        $(".deleteBtn").click(function () {
+          let id = $(this).data("blog-id");
+          deleteBlog(id);
+        });
+      });
+    </script>
+  </body>
+</html>

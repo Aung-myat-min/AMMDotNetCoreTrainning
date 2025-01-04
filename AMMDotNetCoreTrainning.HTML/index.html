@@ -50,12 +50,14 @@
       let blogs;
       let editingBlogId;
 
+      // Reset the form fields
       function resetForm() {
         $("#title").val("");
         $("#author").val("");
         $("#content").val("");
       }
 
+      // Load blogs from localStorage
       function loadBlogs() {
         let lst = localStorage.getItem("blogs");
         if (lst) {
@@ -65,6 +67,7 @@
         }
       }
 
+      // Render blogs to the page
       function renderBlogs() {
         let container = $("#blogList");
         container.empty();
@@ -94,12 +97,14 @@
         });
       }
 
+      // Edit a blog by id
       function editBlog(id) {
         editingBlogId = id;
         let blog = blogs.find((blog) => blog.id === id);
         fillForm(blog);
       }
 
+      // Generate a unique ID
       function generateUID() {
         var firstPart = (Math.random() * 46656) | 0;
         var secondPart = (Math.random() * 46656) | 0;
@@ -108,6 +113,7 @@
         return firstPart + secondPart;
       }
 
+      // Get data from the form
       function getData() {
         let title = $("#title").val();
         let author = $("#author").val();
@@ -115,6 +121,7 @@
         return { title, author, content };
       }
 
+      // Save blogs to localStorage
       function saveBlogs() {
         let { title, author, content } = getData();
 
@@ -136,12 +143,14 @@
         renderBlogs();
       }
 
+      // Fill the form with blog data
       function fillForm(blog) {
         $("#title").val(blog.title);
         $("#author").val(blog.author);
         $("#content").val(blog.content);
       }
 
+      // Delete a blog by id
       function deleteBlog(id) {
         let index = blogs.findIndex((blog) => blog.id === id);
         blogs.splice(index, 1);
@@ -150,22 +159,27 @@
         alert("Blog Deleted!");
       }
 
+      // Document ready function
       $(document).ready(function () {
         loadBlogs();
         renderBlogs();
 
+        // Save button click event
         $("#saveBtn").click(function () {
           saveBlogs();
           loadBlogs();
         });
 
+        // Cancel button click event
         $("#cancelBtn").click(resetForm());
 
+        // Edit button click event
         $(".editBtn").click(function () {
           let id = $(this).data("blog-id");
           editBlog(id);
         });
 
+        // Delete button click event
         $(".deleteBtn").click(function () {
           let id = $(this).data("blog-id");
           deleteBlog(id);

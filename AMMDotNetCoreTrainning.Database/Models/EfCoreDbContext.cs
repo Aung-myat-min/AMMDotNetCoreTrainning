@@ -21,7 +21,7 @@ public partial class EfCoreDbContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            string connectionString = "Data Source=Aung-Myat-Min\\SQLEXPRESS;Initial Catalog=DotNetTrainning;User Id=sa;Password=sasa@123;TrustServerCertificate=True";
+            string connectionString = "Data Source=DESKTOP-6KTIH2K\\SQLEXPRESS;Initial Catalog=DotNetTrainning;User Id=sa;Password=sasa@123;TrustServerCertificate=True";
             optionsBuilder.UseSqlServer(connectionString);
         }
     }

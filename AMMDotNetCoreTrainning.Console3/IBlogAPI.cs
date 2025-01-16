@@ -11,6 +11,21 @@ namespace AMMDotNetCoreTrainning.Console3
     {
         [Get("/api/blogs")]
         Task<List<BlogModel>> GetBlogs();
+
+        [Get("/api/blogs/{id}")]
+        Task<BlogModel> GetBlog(int id);
+
+        [Post("/api/blogs")]
+        Task<BlogModel> CreateBlog(BlogModel blog);
+
+        [Put("/api/blogs/{id}")]
+        Task<BlogModel> UpdateBlog(int id, BlogModel blog);
+
+        [Patch("/api/blogs/{id}")]
+        Task<BlogModel> EditBlog(int id, BlogModel blog);
+
+        [Delete("/api/blogs/{id}")]
+        Task DeleteBlog(int id);
     }
 
     public class BlogModel

@@ -12,7 +12,7 @@ namespace AMMDotNetCoreTrainning.RestAPI.Controllers
     [ApiController]
     public class BlogAdoDotNetController : ControllerBase
     {
-        private readonly String _connectionString = "Data Source=Aung-Myat-Min;Initial Catalog=DotNetTrainning;User Id=sa;Password=sasa@123;TrustServerCertificate=True;";
+        private readonly String _connectionString = "Data Source=DESKTOP-6KTIH2K\\SQLEXPRESS;Initial Catalog=DotNetTrainning;User Id=sa;Password=sasa@123;TrustServerCertificate=True;";
 
         [HttpGet]
         public IActionResult GetBlogs()

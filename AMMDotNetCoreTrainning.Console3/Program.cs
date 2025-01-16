@@ -28,4 +28,12 @@ RefitExample refitExample = new RefitExample();
 Console.Write("Waiting for the api....");
 Console.ReadLine();
 
-refitExample.GetBlogsAndPrint();
+refitExample.GetOneBlog(1);
+//refitExample.CreateBlog(new BlogModel { 
+//    BlogTitle = "Refit Example",
+//    BlogAuthor = "AMM",
+//    BlogContent = "This is just an example!"
+//});
+//refitExample.GetBlogsAndPrint();
+
+Console.ReadLine();

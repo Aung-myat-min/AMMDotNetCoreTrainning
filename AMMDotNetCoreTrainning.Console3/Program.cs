@@ -28,12 +28,27 @@ RefitExample refitExample = new RefitExample();
 Console.Write("Waiting for the api....");
 Console.ReadLine();
 
-refitExample.GetOneBlog(1);
-//refitExample.CreateBlog(new BlogModel { 
+//refitExample.GetOneBlog(1);
+//refitExample.CreateBlog(new BlogModel
+//{
 //    BlogTitle = "Refit Example",
 //    BlogAuthor = "AMM",
 //    BlogContent = "This is just an example!"
 //});
-//refitExample.GetBlogsAndPrint();
+//refitExample.UpdateBlog(3, new BlogModel
+//{
+//    BlogTitle = "Refit Example Updated!",
+//    BlogAuthor = "AMM",
+//    BlogContent = "This is just an example!"
+//});
+//refitExample.EditBlog(3, new BlogModel
+//{
+//    BlogTitle = "Refit Example Updated!",
+//    BlogAuthor = "AMM",
+//    BlogContent = "This is just an example! And it is updated using patch!"
+//});
+refitExample.DeleteBlog(3);
+refitExample.GetBlogsAndPrint();
+
 
 Console.ReadLine();

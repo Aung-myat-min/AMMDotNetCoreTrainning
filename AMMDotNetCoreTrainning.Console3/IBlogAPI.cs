@@ -16,7 +16,7 @@ namespace AMMDotNetCoreTrainning.Console3
         Task<BlogModel> GetBlog(int id);
 
         [Post("/api/blogs")]
-        Task<BlogModel> CreateBlog(BlogModel blog);
+        Task CreateBlog(BlogModel blog);
 
         [Put("/api/blogs/{id}")]
         Task<BlogModel> UpdateBlog(int id, BlogModel blog);

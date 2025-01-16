@@ -21,7 +21,7 @@ namespace AMMDotNetCoreTrainning.RestAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult GetBlogById(int id)
         {
-            var lst = _db.TblBlogs.AsNoTracking().Where(x => x.Equals(id) && x.DeleteFlag == false).FirstOrDefault();
+            var lst = _db.TblBlogs.AsNoTracking().Where(x => x.BlogId.Equals(id) && x.DeleteFlag == false).FirstOrDefault();
             if( lst is null)
             {
                 return NotFound();

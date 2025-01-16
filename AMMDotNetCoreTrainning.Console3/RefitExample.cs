@@ -61,8 +61,8 @@ namespace AMMDotNetCoreTrainning.Console3
             try
             {
                 var refitAPI = RestService.For<IBlogAPI>("https://localhost:7033");
-                var blogs = await refitAPI.CreateBlog(blog);
-                Console.WriteLine($"Blog Title:\t {blogs.BlogTitle}\nBy:\t\t{blogs.BlogAuthor}\nContent: {blogs.BlogContent}");
+                await refitAPI.CreateBlog(blog);
+                Console.WriteLine("Blog Created!");
             }
             catch (ApiException ex)
             {

@@ -6,9 +6,6 @@ namespace AMMDotNetCoreTrainning.Database.Models;
 
 public partial class EfCoreDbContext : DbContext
 {
-    public EfCoreDbContext()
-    {
-    }
 
     public EfCoreDbContext(DbContextOptions<EfCoreDbContext> options)
         : base(options)
@@ -17,14 +14,14 @@ public partial class EfCoreDbContext : DbContext
 
     public virtual DbSet<TblBlog> TblBlogs { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            string connectionString = "Data Source=DESKTOP-6KTIH2K\\SQLEXPRESS;Initial Catalog=DotNetTrainning;User Id=sa;Password=sasa@123;TrustServerCertificate=True";
-            optionsBuilder.UseSqlServer(connectionString);
-        }
-    }
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //{
+    //    if (!optionsBuilder.IsConfigured)
+    //    {
+    //        string connectionString = "Data Source=DESKTOP-6KTIH2K\\SQLEXPRESS;Initial Catalog=DotNetTrainning;User Id=sa;Password=sasa@123;TrustServerCertificate=True";
+    //        optionsBuilder.UseSqlServer(connectionString);
+    //    }
+    //}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

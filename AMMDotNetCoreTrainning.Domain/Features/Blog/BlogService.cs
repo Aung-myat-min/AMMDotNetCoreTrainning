@@ -8,9 +8,14 @@ using System.Threading.Tasks;
 
 namespace AMMDotNetCoreTrainning.Domain.Features.Blog
 {
-    public class BlogService
+    public class BlogService : IBlogService
     {
-        private readonly EfCoreDbContext _db = new EfCoreDbContext();
+        private readonly EfCoreDbContext _db;
+
+        public BlogService(EfCoreDbContext db)
+        {
+            _db = db;
+        }
 
         public List<TblBlog> GetTblblogs()
         {

@@ -10,7 +10,13 @@ namespace AMMDotNetCoreTrainning.RestAPI.Controllers
     [ApiController]
     public class BlogsController : ControllerBase
     {
-        private readonly EfCoreDbContext _db = new EfCoreDbContext();
+        private readonly EfCoreDbContext _db;
+
+        public BlogsController(EfCoreDbContext db)
+        {
+            _db = db;
+        }
+
         [HttpGet]
         public IActionResult GetBlogs()
         {

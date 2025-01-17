@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AMMDotNetTrainning.Console;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -11,7 +12,7 @@ namespace AMMDotNetCoreTrainningConsole
     public class AdoDotNetExample
     {
 
-        private readonly string _connectionString = "Data Source=DESKTOP-KPCHONN\\SQLEXPRESS;Initial Catalog=DotNetTrainning;User ID=sa;Password=sasa@123";
+        private readonly string _connectionString = AppSettings.ConnectionString;
 
         public void Read()
         {

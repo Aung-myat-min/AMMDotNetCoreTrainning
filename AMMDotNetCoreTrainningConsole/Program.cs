@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using AMMDotNetCoreTrainningConsole;
+using Microsoft.Extensions.DependencyInjection;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -21,11 +22,16 @@ Console.WriteLine("Hello, World!");
 //dapperExample.Update(11, "Blog Without Content", "AMMHEHE");
 //dapperExample.Delete();
 
-EFCoreExample eFCoreExample = new EFCoreExample();
+//EFCoreExample eFCoreExample = new EFCoreExample();
 //eFCoreExample.Read();
 //eFCoreExample.Write("EfCoreExample", "AMM");
 //eFCoreExample.Edit(8);
 //eFCoreExample.Update();
-eFCoreExample.Delete(9);
+//eFCoreExample.Delete(9);
+
+var service = new ServiceCollection().AddSingleton<AdoDotNetExample>().BuildServiceProvider();
+
+var adoDotNetExp = service.GetRequiredService<AdoDotNetExample>();
+adoDotNetExp.Read();
 
 Console.ReadKey();

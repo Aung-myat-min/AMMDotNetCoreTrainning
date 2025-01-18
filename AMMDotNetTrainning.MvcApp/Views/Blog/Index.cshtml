@@ -1,6 +1,31 @@
 ﻿@model List<TblBlog>
 @{
 	ViewData["Title"] = "Blogs";
+
+	bool isShowMessage = TempData["IsSuccess"] != null;
+	bool isSuccess = false;
+	string message = "";
+	if (isShowMessage)
+	{
+		isSuccess = Convert.ToBoolean(TempData["IsSuccess"]);
+		message = Convert.ToString(TempData["Message"]);
+	}
+}
+
+@if (isShowMessage)
+{
+	if (isSuccess)
+	{
+		<div class="alert alert-success mb-3" role="alert">
+			@message
+		</div>
+	}
+	else
+	{
+		<div class="alert alert-danger mb-3" role="alert">
+			@message
+		</div>
+	}
 }
 
 <a href="/Blog/Create" class="btn btn-outline-success">Create New Blog</a>

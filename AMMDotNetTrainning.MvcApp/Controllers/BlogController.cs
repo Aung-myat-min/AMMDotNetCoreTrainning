@@ -27,12 +27,25 @@ namespace AMMDotNetTrainning.MvcApp.Controllers
 
         [HttpPost]
         [ActionName("Save")]
-        public IActionResult BlogSave(BlogRequestModel model) {
-            var blog = _blogService.CreateBlog(new AMMDotNetCoreTrainning.Database.Models.TblBlog {
-                BlogTitle = model.BlogTitle,
-                BlogAuthor = model.BlogAuthor,
-                BlogContent = model.BlogContent,
-            });
+        public IActionResult BlogSave(BlogRequestModel model)
+        {
+            try
+            {
+                _blogService.CreateBlog(new AMMDotNetCoreTrainning.Database.Models.TblBlog
+                {
+                    BlogTitle = model.BlogTitle,
+                    BlogAuthor = model.BlogAuthor,
+                    BlogContent = model.BlogContent,
+                });
+
+                TempData["IsSuccess"] = true;
+                TempData["Message"] = "Blog Created Successfully!";
+            }
+            catch (Exception e)
+            {
+                TempData["IsSuccess"] = false;
+                TempData["Message"] = e.Message;
+            }
 
             return RedirectToAction("Index");
         }

@@ -1,0 +1,24 @@
+﻿@model TblBlog
+
+@{
+    ViewData["Title"] = "Edit Blog";
+}
+
+<form action="/Blog/Update/@Model.BlogId" method="post">
+    <h1>Edit Blog!</h1>
+    <div class="container p-5 w-50 border border-3 border-dark rounded-3">
+        <div class="d-flex flex-row align-items-center mb-3">
+            <label for="title" class="text-nowrap px-4">Blog Title: </label>
+            <input type="text" id="title" class="form-control" name="BlogTitle" value="@Model.BlogTitle" />
+        </div>
+        <div class="d-flex flex-row align-items-center mb-3">
+            <label for="author" class="text-nowrap px-4">Blog Author: </label>
+            <input type="text" id="author" class="form-control" name="BlogAuthor" value="@Model.BlogAuthor" />
+        </div>
+        <div class="d-flex flex-row align-items-start">
+            <label for="content" class="text-nowrap px-4">Blog Content: </label>
+            <textarea type="text" id="content" class="form-control" name="BlogContent">@Model.BlogContent</textarea>
+        </div>
+        <button type="submit" class="btn btn-success" id="saveBtn">Save</button>
+    </div>
+</form>

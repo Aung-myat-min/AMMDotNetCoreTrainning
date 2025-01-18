@@ -38,7 +38,7 @@ namespace AMMDotNetCoreTrainning.Domain.Features.Blog
 
         public TblBlog? UpdateBlog(int id, TblBlog blog)
         {
-            var item = GetTblBlog(id);
+            var item = _db.TblBlogs.AsNoTracking().FirstOrDefault(x => x.BlogId == id && x.DeleteFlag == false);
             if (blog is null || item is null)
             {
                 return null;

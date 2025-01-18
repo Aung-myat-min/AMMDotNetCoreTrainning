@@ -1,6 +1,7 @@
 ﻿using AMMDotNetCoreTrainning.Domain.Features.Blog;
 using AMMDotNetTrainning.MvcApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using AMMDotNetCoreTrainning.Database.Models;
 
 namespace AMMDotNetTrainning.MvcApp.Controllers
 {
@@ -59,6 +60,48 @@ namespace AMMDotNetTrainning.MvcApp.Controllers
 
                 TempData["IsSuccess"] = true;
                 TempData["Message"] = "Blog Deleted Successfully!";
+            }
+            catch (Exception e)
+            {
+                TempData["IsSuccess"] = false;
+                TempData["Message"] = e.Message;
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [ActionName("Edit")]
+        public IActionResult BlogEdit(int id)
+        {
+            var blog = _blogService.GetTblBlog(id);
+            if (blog != null)
+            {
+                return View("EditBlog", blog);
+            }
+            else
+            {
+                return View("Index");
+            }
+        }
+
+        [ActionName("Update")]
+        public IActionResult BlogUpdateAction(int id, BlogRequestModel blog)
+        {
+            try
+            {
+                var updatedBlog = new TblBlog
+                {
+                    BlogId = id,
+                    BlogAuthor = blog.BlogAuthor,
+                    BlogContent = blog.BlogContent,
+                    BlogTitle = blog.BlogTitle,
+                    DeleteFlag = false
+                };
+                Console.WriteLine(updatedBlog.BlogId);
+                //_blogService.UpdateBlog(id, updatedBlog);
+
+                TempData["IsSuccess"] = true;
+                TempData["Message"] = "Blog Updated Successfully!";
             }
             catch (Exception e)
             {

@@ -45,9 +45,9 @@
 						<p class="card-text">
 							@(blog.BlogContent)
 						</p>
-						<button type="button" class="btn btn-warning editBtn">
+						<a type="button" class="btn btn-warning editBtn" href="/Blog/Edit/@blog.BlogId">
 							Edit
-						</button>
+						</a>
 						<a class="btn btn-danger deleteBtn" href="/Blog/Delete/@blog.BlogId">
 							Delete
 						</a>

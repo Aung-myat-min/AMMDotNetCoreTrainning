@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMMDotNetTrainning.Console3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMMDotNetTrainning.RestAPI2", "AMMDotNetTrainning.RestAPI2\AMMDotNetTrainning.RestAPI2.csproj", "{675C74F8-C3A8-43AD-A0BE-2FF65313EB5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMMDotNetTrainning.MvcApp", "AMMDotNetTrainning.MvcApp\AMMDotNetTrainning.MvcApp.csproj", "{A55EB29C-7574-4688-AC1D-9DC328167184}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,10 @@ Global
 		{675C74F8-C3A8-43AD-A0BE-2FF65313EB5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{675C74F8-C3A8-43AD-A0BE-2FF65313EB5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{675C74F8-C3A8-43AD-A0BE-2FF65313EB5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A55EB29C-7574-4688-AC1D-9DC328167184}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A55EB29C-7574-4688-AC1D-9DC328167184}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A55EB29C-7574-4688-AC1D-9DC328167184}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A55EB29C-7574-4688-AC1D-9DC328167184}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

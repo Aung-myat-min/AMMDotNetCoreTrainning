@@ -49,5 +49,24 @@ namespace AMMDotNetTrainning.MvcApp.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [ActionName("Delete")]
+        public IActionResult BlogDelete(int id)
+        {
+            try
+            {
+                _blogService.DeleteBlog(id);
+
+                TempData["IsSuccess"] = true;
+                TempData["Message"] = "Blog Deleted Successfully!";
+            }
+            catch (Exception e)
+            {
+                TempData["IsSuccess"] = false;
+                TempData["Message"] = e.Message;
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -97,8 +97,7 @@ namespace AMMDotNetTrainning.MvcApp.Controllers
                     BlogTitle = blog.BlogTitle,
                     DeleteFlag = false
                 };
-                Console.WriteLine(updatedBlog.BlogId);
-                //_blogService.UpdateBlog(id, updatedBlog);
+                _blogService.UpdateBlog(id, updatedBlog);
 
                 TempData["IsSuccess"] = true;
                 TempData["Message"] = "Blog Updated Successfully!";

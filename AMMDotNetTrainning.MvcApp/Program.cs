@@ -12,7 +12,10 @@ builder.Services.AddDbContext<EfCoreDbContext>(option =>
 builder.Services.AddScoped<IBlogService, BlogService>();
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(opt =>
+{
+    opt.JsonSerializerOptions.PropertyNamingPolicy = null;
+});
 
 var app = builder.Build();
 

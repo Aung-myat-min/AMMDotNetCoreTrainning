@@ -1,0 +1,51 @@
+﻿<a href="/Blog/Create" class="btn btn-outline-success">Create New Blog</a>
+
+<div class="container mt-4">
+	<div class="row" id="blogList">
+	</div>
+</div>
+
+@section scripts {
+	<script>
+		$(document).ready(function(){
+			loadBlogs();
+		});
+
+		function loadBlogs(){
+			$.ajax({
+				url: '/BlogAjax/List',
+				type: 'GET',
+				success: function(response){
+					$('#blogList').empty();
+					for (let i = 0; i < response.length; i++)
+					{
+						var blog = response[i];
+						let tr = `<div class="col-sm-6 mb-3">
+							<div class="card">
+								<div class="card-body">
+									<h5 class="card-title">${blog.BlogTitle}</h5>
+									<h6 class="card-subtitle mb-2 text-body-secondary">
+									${blog.BlogAuthor}
+									</h6>
+									<p class="card-text">
+									${blog.BlogContent}
+									</p>
+									<a type="button" class="btn btn-warning editBtn" href="/Blog/Edit/${blog.BlogId}">
+										Edit
+									</a>
+									<button class="btn btn-danger deleteBtn">
+										Delete
+									</button>
+								</div>
+							</div>
+						</div>`;
+						$('#blogList').append(tr);
+					}
+				},
+				error: function(error){
+					console.log(error);
+				}
+			});
+		}
+	</script>
+}

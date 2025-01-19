@@ -1,6 +1,7 @@
 ﻿using AMMDotNetCoreTrainning.Database.Models;
 using AMMDotNetCoreTrainning.Domain.Features.Blog;
 using AMMDotNetTrainning.MvcApp.Models;
+using Azure;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata;
 
@@ -62,7 +63,6 @@ namespace AMMDotNetTrainning.MvcApp.Controllers
             return Json(message);
         }
 
-        [HttpPatch]
         [ActionName("Edit")]
         public IActionResult EditBlogView(int id)
         {
@@ -70,6 +70,7 @@ namespace AMMDotNetTrainning.MvcApp.Controllers
             return View("BlogEdit", blog);
         }
 
+        [HttpPatch]
         [ActionName("Update")]
         public IActionResult UpdateBlog(int id, BlogRequestModel model)
         {
@@ -90,7 +91,7 @@ namespace AMMDotNetTrainning.MvcApp.Controllers
                 TempData["IsSuccess"] = true;
                 TempData["Message"] = "Blog Updated!";
 
-                response = new MessageModel(false, "Blog Updated!");
+                response = new MessageModel(true, "Blog Updated!");
             }
             catch (Exception ex)
             {
@@ -98,6 +99,32 @@ namespace AMMDotNetTrainning.MvcApp.Controllers
                 TempData["Message"] = ex.ToString();
 
                 response = new MessageModel(false, ex.ToString());
+            }
+
+            return Json(response);
+        }
+
+        [HttpPatch]
+        [ActionName("Delete")]
+        public IActionResult BlogDelete(BlogRequestModel model)
+        {
+            MessageModel response;
+            try
+            {
+                _blogService.DeleteBlog(model.BlogId);
+
+                TempData["IsSuccess"] = true;
+                TempData["Message"] = "Blog Deleted Successfully!";
+
+                response = new MessageModel(true, "Blog Deleted!");
+            }
+            catch (Exception e)
+            {
+                TempData["IsSuccess"] = false;
+                TempData["Message"] = e.Message;
+
+                response = new MessageModel(false, e.Message);
+
             }
 
             return Json(response);

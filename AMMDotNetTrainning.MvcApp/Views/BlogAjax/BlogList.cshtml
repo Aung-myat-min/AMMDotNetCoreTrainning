@@ -21,8 +21,7 @@
 				type: 'GET',
 				success: function(response){
 					$('#blogList').empty();
-					for (let i = 0; i < response.length; i++)
-					{
+					for (let i = 0; i < response.length; i++){
 						var blog = response[i];
 						let tr = `<div class="col-sm-6 mb-3">
 							<div class="card">
@@ -37,7 +36,7 @@
 									<a type="button" class="btn btn-warning editBtn" href="/BlogAjax/Edit/${blog.BlogId}">
 										Edit
 									</a>
-									<button class="btn btn-danger deleteBtn">
+									<button type="button" data-id=${blog.BlogId} class="btn btn-danger deleteBtn">
 										Delete
 									</button>
 								</div>
@@ -45,11 +44,39 @@
 						</div>`;
 						$('#blogList').append(tr);
 					}
+					bindDeleteFunction();
 				},
 				error: function(error){
 					console.log(error);
 				}
 			});
+		}
+
+		function bindDeleteFunction(){
+			$('.deleteBtn').click(function(){
+				const id = $(this).data('id');
+
+				$.ajax({
+					url: '/BlogAjax/Delete',
+					type: "PATCH",
+					data: {
+						BlogId: id
+					},
+					success: function(response){
+						if(!response.IsSuccess){
+							alert(response.Message);
+							return;
+						}
+
+						alert(response.Message);
+						location.href = '/BlogAjax'
+					},
+					error: function(error){
+						alert("Blog Delete Failed!")
+						console.error(error)
+					}
+				});
+			})
 		}
 	</script>
 }

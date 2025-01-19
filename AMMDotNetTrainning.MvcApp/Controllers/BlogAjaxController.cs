@@ -2,6 +2,7 @@
 using AMMDotNetCoreTrainning.Domain.Features.Blog;
 using AMMDotNetTrainning.MvcApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata;
 
 namespace AMMDotNetTrainning.MvcApp.Controllers
 {
@@ -59,6 +60,47 @@ namespace AMMDotNetTrainning.MvcApp.Controllers
             }
 
             return Json(message);
+        }
+
+        [HttpPatch]
+        [ActionName("Edit")]
+        public IActionResult EditBlogView(int id)
+        {
+            var blog = _blogService.GetTblBlog(id);
+            return View("BlogEdit", blog);
+        }
+
+        [ActionName("Update")]
+        public IActionResult UpdateBlog(int id, BlogRequestModel model)
+        {
+            MessageModel response;
+
+            try
+            {
+                var updatedBlog = new TblBlog
+                {
+                    BlogId = id,
+                    BlogAuthor = model.BlogAuthor,
+                    BlogContent = model.BlogContent,
+                    BlogTitle = model.BlogTitle,
+                    DeleteFlag = false
+                };
+                _blogService.UpdateBlog(id, updatedBlog);
+
+                TempData["IsSuccess"] = true;
+                TempData["Message"] = "Blog Updated!";
+
+                response = new MessageModel(false, "Blog Updated!");
+            }
+            catch (Exception ex)
+            {
+                TempData["IsSuccess"] = false;
+                TempData["Message"] = ex.ToString();
+
+                response = new MessageModel(false, ex.ToString());
+            }
+
+            return Json(response);
         }
     }
 }

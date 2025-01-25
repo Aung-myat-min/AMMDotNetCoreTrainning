@@ -51,5 +51,24 @@ namespace AMMDotNetTrainning.ChartWebApp.Controllers
             };
             return View("LineChart", _lineChartData);
         }
+
+        public IActionResult AreaChart()
+        {
+            var _areaChartData = new AreaChartModel();
+            _areaChartData.Title = "Spline Area Chart";
+            _areaChartData.Data = new List<AreaChartData>
+            {
+                new AreaChartData( 10 ),
+                new AreaChartData( 6 ),
+                new AreaChartData( 14 ),
+                new AreaChartData( 12 ),
+                new AreaChartData( 19 ),
+                new AreaChartData( 14 ),
+                new AreaChartData( 26 ),
+                new AreaChartData( 10 ),
+                new AreaChartData( 22 ),
+            };
+            return View("AreaChart");
+        }
     }
 }

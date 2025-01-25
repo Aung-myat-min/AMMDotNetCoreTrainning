@@ -1,0 +1,60 @@
+﻿@model BarChartModel
+@{
+    ViewData["Title"] = Model.Title;
+    var _title = Model.Title;
+    var _data = Model.Data;
+    var _xRowNames = Model.XRowNames;
+}
+
+<canvas id="myChart"></canvas>
+
+@section scripts {
+    <script>
+        // Serializing model data to JavaScript
+        const label = @Html.Raw(JsonConvert.SerializeObject(_xRowNames));
+        const rowData = @Html.Raw(JsonConvert.SerializeObject(_data));
+
+        // Data configuration
+        const labels = label;
+        const data = {
+            labels: labels,
+            datasets: rowData.map((dataset, index) => {
+                const colors = [
+                    {borderColor: 'rgb(255, 99, 132)', backgroundColor: 'rgba(255, 99, 132, 0.5)', borderRadius: Number.MAX_VALUE},
+                    {borderColor: 'rgb(54, 162, 235)', backgroundColor: 'rgba(54, 162, 235, 0.5)', borderRadius: 5}
+                ];
+                return {
+                    label: dataset.Title,
+                    data: dataset.Data,
+                    borderColor: colors[index].borderColor,
+                    backgroundColor: colors[index].backgroundColor,
+                    borderWidth: 2,
+                    borderRadius: colors[index].borderRadius,
+                    borderSkipped: false,
+                };
+            })
+        };
+
+        // Chart configuration
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: @Html.Raw(JsonConvert.SerializeObject(_title)),
+                    },
+                },
+            },
+        };
+
+        // Render the chart
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, config);
+    </script>
+}

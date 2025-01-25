@@ -13,8 +13,8 @@
 
         public BarChartData(string title, List<int> data)
         {
-            this.Title = title;
-            this.Data = data;
+            Title = title;
+            Data = data;
         }
     }
 }

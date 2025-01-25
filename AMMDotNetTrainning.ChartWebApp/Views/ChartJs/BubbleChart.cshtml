@@ -1,0 +1,43 @@
+﻿@model BubbleChartModel
+@{
+    ViewData["Title"] = Model.Title;
+    var _title = Model.Title;
+    var _data = Model.Data;
+    var _background = Model.BackgroundColor;
+}
+
+<canvas id="myChart"></canvas>
+
+@section scripts {
+    <script>
+        // Serializing model data to JavaScript
+        const datas = @Html.Raw(JsonConvert.SerializeObject(_data));
+
+        // Data configuration
+        const data = {
+          datasets: datas
+        };
+
+        // Chart configuration
+        const config = {
+        type: 'bubble',
+        data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: @Html.Raw(JsonConvert.SerializeObject(_title)),
+                    },
+                },
+            },
+        };
+
+        // Render the chart
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, config);
+    </script>
+}

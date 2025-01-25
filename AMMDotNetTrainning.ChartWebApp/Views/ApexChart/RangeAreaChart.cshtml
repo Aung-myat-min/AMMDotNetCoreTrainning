@@ -1,0 +1,49 @@
+﻿@model RangeAreaChartModel
+@{
+    ViewData["Title"] = Model.Title;
+    var _title = Model.Title;
+    var _series = Model.Data;
+    var _label = Model.Label;
+}
+<div id="chart"></div>
+
+@section scripts {
+    <script>
+        const title = @Html.Raw(JsonConvert.SerializeObject(_title));
+        const series = @Html.Raw(JsonConvert.SerializeObject(_series));
+        const label = @Html.Raw(JsonConvert.SerializeObject(_label));
+
+        var options = {
+          series: series,
+          chart: {
+          height: 350,
+          type: 'rangeArea'
+        },
+        stroke: {
+          curve: 'monotoneCubic'
+        },
+        title: {
+          text: title
+        },
+        markers: {
+          hover: {
+            sizeOffset: 5
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        yaxis: {
+          labels: {
+            formatter: (val) => {
+              return val + label
+            }
+          }
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+
+    </script>
+}

@@ -17,5 +17,33 @@ namespace AMMDotNetTrainning.ChartWebApp.Controllers
             };
             return View("ColumnChart", _chartData);
         }
+
+        public IActionResult RangeAreaChart()
+        {
+            var chartData = new RangeAreaChartModel();
+            chartData.Title = "New York Temperature (all year round)";
+            chartData.Label = " °C";
+            chartData.Data = new List<ParentRangeArea>
+            {
+                new ParentRangeArea("New York Temperature", new List<RangeAreaChartData>
+                {
+                    new RangeAreaChartData("Jan", new List<int> { -2, 4 }),
+                    new RangeAreaChartData("Feb", new List<int> { -1, 6 }),
+                    new RangeAreaChartData("Mar", new List<int> { 3, 10 }),
+                    new RangeAreaChartData("Apr", new List<int> { 8, 16 }),
+                    new RangeAreaChartData("May", new List<int> { 13, 22 }),
+                    new RangeAreaChartData("Jun", new List<int> { 18, 26 }),
+                    new RangeAreaChartData("Jul", new List<int> { 21, 29 }),
+                    new RangeAreaChartData("Aug", new List<int> { 21, 28 }),
+                    new RangeAreaChartData("Sep", new List<int> { 17, 24 }),
+                    new RangeAreaChartData("Oct", new List<int> { 11, 18 }),
+                    new RangeAreaChartData("Nov", new List<int> { 6, 12 }),
+                    new RangeAreaChartData("Dec", new List<int> { 1, 7 }),
+                })
+            };
+            return View("RangeAreaChart", chartData);
+        }
+
+
     }
 }

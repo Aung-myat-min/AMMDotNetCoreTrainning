@@ -68,7 +68,7 @@ namespace AMMDotNetTrainning.ChartWebApp.Controllers
                 new AreaChartData( 10 ),
                 new AreaChartData( 22 ),
             };
-            return View("AreaChart");
+            return View("AreaChart", _areaChartData);
         }
     }
 }

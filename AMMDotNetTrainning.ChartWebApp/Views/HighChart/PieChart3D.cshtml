@@ -1,0 +1,66 @@
+﻿@model PieChart3DModel
+@{
+	ViewData["Title"] = Model.Title;
+	var _title = Model.Title;
+	var _sub = Model.Subtitle;
+	var _data = Model.Data;
+}
+<figure class="highcharts-figure">
+	<div id="container"></div>
+	<p class="highcharts-description">
+		<i>*OPPO includes OnePlus since Q3 2021</i><br><br>
+		Chart demonstrating the use of a 3D pie layout.
+		The "Xiaomi" slice has been selected, and is offset from the pie.
+		Click on slices to select and unselect them.
+		Note that 3D pies, while decorative, can be hard to read, and the
+		viewing angles can make slices close to the user appear larger than they
+		are.
+	</p>
+</figure>
+
+@section scripts {
+	<script>
+				Highcharts.chart('container', {
+			chart: {
+				type: 'pie',
+				options3d: {
+					enabled: true,
+					alpha: 45,
+					beta: 0
+				}
+			},
+			title: {
+				text: @Html.Raw(JsonConvert.SerializeObject(_title))
+			},
+			subtitle: {
+				text:  @Html.Raw(JsonConvert.SerializeObject(_sub))
+			},
+			accessibility: {
+				point: {
+					valueSuffix: '%'
+				}
+			},
+			tooltip: {
+				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+			},
+			plotOptions: {
+				pie: {
+					allowPointSelect: true,
+					cursor: 'pointer',
+					depth: 35,
+					dataLabels: {
+						enabled: true,
+						format: '{point.name}'
+					}
+				}
+			},
+			series: [{
+				type: 'pie',
+				name: 'Share',
+				data:  @Html.Raw(JsonConvert.SerializeObject(_data))
+			}]
+		});
+
+
+	</script>
+}

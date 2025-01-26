@@ -142,5 +142,25 @@ namespace AMMDotNetTrainning.ChartWebApp.Controllers
 
             return View("TreeChart", model);
         }
+
+        public IActionResult PieChart3D()
+        {
+            var model = new PieChart3DModel
+            {
+                Title = "Global smartphone shipments market share, Q1 2022",
+                Subtitle = "Source: <a href='https://www.counterpointresearch.com/global-smartphone-share/' target='_blank'>Counterpoint Research</a>",
+                Data = new List<PieChart3DData>
+                {
+                    new PieChart3DData("Samsung", 23),
+                    new PieChart3DData("Apple", 18),
+                    new PieChart3DData("Xiaomi", 12, true, true),
+                    new PieChart3DData("Oppo*", 9),
+                    new PieChart3DData("Vivo", 8),
+                    new PieChart3DData("Others", 30)
+                }
+            };
+
+            return View("PieChart3D", model);
+        }
     }
 }

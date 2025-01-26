@@ -1,0 +1,88 @@
+﻿@model TreeChartModel
+@{
+	ViewData["Title"] = Model.Title;
+	var _title = Model.Title;
+	var _data = Model.Data;
+}
+
+<figure class="highcharts-figure">
+	<div id="container"></div>
+	<p class="highcharts-description">
+		The treegraph series can be used to render phylogenetic trees, a typical
+		visualization of genetics and related tree structures.
+	</p>
+</figure>
+
+@section scripts {
+	<script>
+		Highcharts.chart('container', {
+			chart: {
+				spacingBottom: 30,
+				marginRight: 120,
+				height: 1200
+			},
+			title: {
+				text: @Html.Raw(JsonConvert.SerializeObject(_title))
+			},
+			series: [
+				{
+					type: 'treegraph',
+					keys: ['parent', 'id', 'level'],
+					clip: false,
+					data: @Html.Raw(JsonConvert.SerializeObject(_data)),
+					marker: {
+						symbol: 'circle',
+						radius: 6,
+						fillColor: '#ffffff',
+						lineWidth: 3
+					},
+					dataLabels: {
+						align: 'left',
+						pointFormat: '{point.id}',
+						style: {
+							color: '#000000',
+							textOutline: '3px #ffffff',
+							whiteSpace: 'nowrap'
+						},
+						x: 24,
+						crop: false,
+						overflow: 'none'
+					},
+					levels: [
+						{
+							level: 1,
+							levelIsConstant: false
+						},
+						{
+							level: 2,
+							colorByPoint: true
+						},
+						{
+							level: 3,
+							colorVariation: {
+								key: 'brightness',
+								to: -0.5
+							}
+						},
+						{
+							level: 4,
+							colorVariation: {
+								key: 'brightness',
+								to: 0.5
+							}
+						},
+						{
+							level: 6,
+							dataLabels: {
+								x: 10
+							},
+							marker: {
+								radius: 4
+							}
+						}
+					]
+				}
+			]
+		});
+	</script>
+}
